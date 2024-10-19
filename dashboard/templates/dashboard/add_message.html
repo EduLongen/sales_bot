@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adicionar Mensagem</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'dashboard/css/add_message.css' %}">
+</head>
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <div class="logo">
+        <h2>Dashboard</h2>
+      </div>
+      <ul class="menu">
+        <li class="menu-item">
+          <a href="{% url 'dashboard' %}" class="menu-link">
+            <span>⚡</span> Dashboard
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'clients' %}" class="menu-link">
+            <span>👥</span> Clientes
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'categories' %}" class="menu-link">
+            <span>📦</span> Categorias
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'products' %}" class="menu-link">
+            <span>🛒</span> Produtos
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'orders' %}" class="menu-link">
+            <span>📑</span> Pedidos
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'transmission' %}" class="menu-link">
+            <span>📡</span> Transmissão
+          </a>
+        </li>
+        <li class="menu-item active">
+          <a href="{% url 'messages' %}" class="menu-link">
+            <span>✉️</span> Mensagens
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'users' %}" class="menu-link">
+            <span>👤</span> Usuários
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'payment' %}" class="menu-link">
+            <span>💳</span> Pagamento
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <h1>Adicionar nova mensagem</h1>
+      </header>
+
+      <form class="message-form" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="descricao">Mensagem:</label>
+          <textarea id="descricao" name="descricao" placeholder="Escreva sua descrição..." class="input-field textarea-field"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="submit-btn">Adicionar Mensagem</button>
+          <a href="{% url 'messages' %}" class="back-btn">Voltar</a>
+        </div>
+      </form>
+    </main>
+  </div>
+</body>
+
+<!-- Modal Structure -->
+<div id="messageModal" class="modal">
+  <div class="modal-content">
+    <h2>Mensagem Adicionada!</h2>
+    <p>A nova mensagem foi adicionada com sucesso.</p>
+    <button id="closeMessageModal" class="modal-btn">OK</button>
+  </div>
+</div>
+
+<script src="{% static 'dashboard/js/add_message.js' %}"></script>
+
+</html>

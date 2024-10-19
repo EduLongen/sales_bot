@@ -1,0 +1,388 @@
+/* Primary Color Palette */
+:root {
+  /* Gray Colors */
+  --gray-0: #ffffff;
+  --gray-10: #fdfdfd;
+  --gray-25: #FCFCFD;
+  --gray-50: #F9FAFB;
+  --gray-100: #F2F4F7;
+  --gray-200: #E4E7EC;
+  --gray-300: #D0D5DD;
+  --gray-400: #98A2B3;
+  --gray-500: #667085;
+  --gray-600: #475467;
+  --gray-700: #344054;
+  --gray-800: #1D2939;
+  --gray-900: #101828;
+
+  /* Brand Colors (Purple) */
+  --brand-25: #FCAFFF;
+  --brand-50: #F9F5FF;
+  --brand-100: #F4EBFF;
+  --brand-200: #E9D7FE;
+  --brand-300: #D6BBFB;
+  --brand-400: #B692F6;
+  --brand-500: #9E77ED;
+  --brand-600: #7F56D9;
+  --brand-700: #6941C6;
+  --brand-800: #53389E;
+  --brand-900: #42307D;
+
+  /* Error Colors (Red) */
+  --error-25: #FFFBFA;
+  --error-50: #FEF3F2;
+  --error-100: #FEE4E2;
+  --error-200: #FECDCA;
+  --error-300: #FDA29B;
+  --error-400: #F97066;
+  --error-500: #F04438;
+  --error-600: #D92D20;
+  --error-700: #B42318;
+  --error-800: #912018;
+  --error-900: #7A271A;
+
+  /* Warning Colors (Yellow) */
+  --warning-25: #FFFCF5;
+  --warning-50: #FFF7EB;
+  --warning-100: #FEEFC7;
+  --warning-200: #FEDF89;
+  --warning-300: #FEC84B;
+  --warning-400: #FDB022;
+  --warning-500: #F79009;
+  --warning-600: #DC6803;
+  --warning-700: #B54708;
+  --warning-800: #93370D;
+  --warning-900: #7A2E0E;
+
+  /* Success Colors (Green) */
+  --success-25: #F6FEF9;
+  --success-50: #ECFDF3;
+  --success-100: #D1FADF;
+  --success-200: #A6F4C5;
+  --success-300: #6CE9A6;
+  --success-400: #32D583;
+  --success-500: #12B76A;
+  --success-600: #039855;
+  --success-700: #027A48;
+  --success-800: #05603A;
+  --success-900: #054F31;
+
+  /* Secondary Color Palette */
+  /* Blue Gray */
+  --blue-gray-25: #FCCFCD;
+  --blue-gray-50: #F8F9FC;
+  --blue-gray-100: #EAECF5;
+  --blue-gray-200: #D5D6E5;
+  --blue-gray-300: #AFB5D9;
+  --blue-gray-400: #717BBC;
+  --blue-gray-500: #4E5BA6;
+  --blue-gray-600: #3E4784;
+  --blue-gray-700: #363F72;
+  --blue-gray-800: #293056;
+  --blue-gray-900: #101323;
+
+  /* Blue Light */
+  --blue-light-25: #F5FBFF;
+  --blue-light-50: #F0F9FF;
+  --blue-light-100: #E0F2FE;
+  --blue-light-200: #B9E6FE;
+  --blue-light-300: #7CD4FD;
+  --blue-light-400: #36BFFA;
+  --blue-light-500: #0BA5EC;
+  --blue-light-600: #0086C9;
+  --blue-light-700: #026AA2;
+  --blue-light-800: #065986;
+  --blue-light-900: #0B4A6F;
+
+  /* Blue */
+  --blue-25: #F5FAFF;
+  --blue-50: #EFF8FF;
+  --blue-100: #D1E9FF;
+  --blue-200: #B2DDFF;
+  --blue-300: #84CAFF;
+  --blue-400: #53B1FD;
+  --blue-500: #2E90FA;
+  --blue-600: #1570EF;
+  --blue-700: #175CD3;
+  --blue-800: #1849A9;
+  --blue-900: #194185;
+
+  /* Indigo */
+  --indigo-25: #F5F8FF;
+  --indigo-50: #EEF4FF;
+  --indigo-100: #E0EAFF;
+  --indigo-200: #C7D7FE;
+  --indigo-300: #A4BCFD;
+  --indigo-400: #8098F9;
+  --indigo-500: #6172F3;
+  --indigo-600: #444CE7;
+  --indigo-700: #3538CD;
+  --indigo-800: #2D31A6;
+  --indigo-900: #2D2382;
+
+  /* Purple */
+  --purple-25: #FAFAFF;
+  --purple-50: #F4F3FF;
+  --purple-100: #EBE9FE;
+  --purple-200: #D9D6FE;
+  --purple-300: #BDB4FE;
+  --purple-400: #9B8AFB;
+  --purple-500: #7A5AF8;
+  --purple-600: #6938EF;
+  --purple-700: #5925DC;
+  --purple-800: #4A1FB8;
+  --purple-900: #3E1C96;
+
+  /* Pink */
+  --pink-25: #FEF6FB;
+  --pink-50: #FDF2FA;
+  --pink-100: #FCE7F6;
+  --pink-200: #FCCEEE;
+  --pink-300: #FAA7E0;
+  --pink-400: #F670C7;
+  --pink-500: #EE46BC;
+  --pink-600: #DD2590;
+  --pink-700: #C11574;
+  --pink-800: #9E165F;
+  --pink-900: #851651;
+
+  /* Rose */
+  --rose-25: #FFF5F6;
+  --rose-50: #FFF1F3;
+  --rose-100: #FFE4E8;
+  --rose-200: #FECDD6;
+  --rose-300: #FEA3B4;
+  --rose-400: #FD6F8E;
+  --rose-500: #F63D68;
+  --rose-600: #E31B54;
+  --rose-700: #C01048;
+  --rose-800: #A11043;
+  --rose-900: #89123E;
+
+  /* Orange */
+  --orange-25: #FFFAF5;
+  --orange-50: #FFF6ED;
+  --orange-100: #FFEAD5;
+  --orange-200: #FDDCAB;
+  --orange-300: #FEB273;
+  --orange-400: #FD853A;
+  --orange-500: #FB6514;
+  --orange-600: #EC4A0A;
+  --orange-700: #C4320A;
+  --orange-800: #A42E12;
+  --orange-900: #7A271A;
+}
+
+
+/* General styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", sans-serif;
+  background-color: var(--gray-50);
+  color: var(--gray-900);
+}
+
+/* Dashboard layout */
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+}
+
+/* Sidebar styles */
+.sidebar {
+  width: 250px;
+  background-color: var(--gray-100);
+  padding: 24px;
+  border-right: 1px solid var(--gray-200);
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.menu {
+  list-style: none;
+}
+
+.menu-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+}
+
+.menu-item {
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: var(--gray-900);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.4s ease;
+}
+
+.menu-item:hover .menu-link {
+  background-color: var(--gray-200);
+  transition: background-color 0.4s ease;
+  color: var(--gray-900);
+}
+
+.menu-item.active .menu-link {
+  background-color: var(--gray-600);
+  color: var(--gray-25);
+}
+
+.menu-link span {
+  margin-right: 10px;
+}
+
+/* Main content */
+.main-content {
+  flex-grow: 1;
+  padding: 32px;
+  background-color: var(--gray-50);
+}
+
+.header {
+  margin-bottom: 32px;
+}
+
+.header h1 {
+  font-size: 24px;
+  margin-bottom: 8px;
+  color: var(--gray-900);
+}
+
+/* Form styles */
+.form-container {
+  margin-top: 32px;
+}
+
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-group label {
+  font-size: 16px;
+  color: var(--gray-900);
+}
+
+.form-group input {
+  width: 100%;
+  height: 44px;
+  padding: 12px;
+  margin-top: 8px;
+  border: 1px solid var(--gray-300);
+  border-radius: 8px;
+  font-size: 16px;
+  color: var(--gray-900);
+}
+
+.button-group {
+  display: flex;
+  gap: 16px;
+}
+
+.add-category-btn {
+  background-color: var(--blue-600);
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: max-content;
+  height: 44px;
+}
+
+.add-category-btn:hover {
+  background-color: var(--blue-500);
+}
+
+.back-btn {
+  background-color: var(--gray-100);
+  color: var(--gray-900);
+  height: 44px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--gray-300);
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  display: inline-block;
+  text-decoration: none; 
+  transition: background-color 0.3s ease;
+  margin-left: 8px; 
+}
+
+.back-btn:hover {
+  background-color: var(--gray-200);
+}
+
+/* Modal Styles */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1000; /* Ensure it stays on top */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: var(--gray-0);
+  padding: 24px; /* Use 4px rule - 24px for larger padding */
+  border-radius: 8px; /* Smooth corners */
+  width: 100%;
+  max-width: 400px; /* Limit the width for better readability */
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  text-align: left; /* Left-align the content */
+}
+
+.modal-content h2 {
+  font-size: 20px;
+  margin-bottom: 12px; /* Use 4px rule */
+  color: var(--gray-900);
+}
+
+.modal-content p {
+  font-size: 16px;
+  margin-bottom: 24px; /* Use 4px rule for spacing */
+  color: var(--gray-600);
+}
+
+.modal-btn {
+  background-color: var(--blue-600);
+  color: var(--gray-0);
+  padding: 10px 16px; /* Use 4px rule */
+  border: none;
+  border-radius: 8px; /* Smooth corners */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal-btn:hover {
+  background-color: var(--blue-500); /* Lighter shade on hover */
+}
+
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+  .button-group {
+    flex-direction: column;
+    gap: 12px;
+  }
+}

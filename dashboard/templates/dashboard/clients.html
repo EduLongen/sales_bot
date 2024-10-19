@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clientes</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'dashboard/css/clients.css' %}">
+</head>
+
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <div class="logo">
+        <h2>Dashboard</h2>
+      </div>
+      <ul class="menu">
+        <li class="menu-item">
+          <a href="{% url 'dashboard' %}" class="menu-link">
+            <span>⚡</span> Dashboard
+          </a>
+        </li>
+        <li class="menu-item active">
+          <a href="{% url 'clients' %}" class="menu-link">
+            <span>👥</span> Clientes
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'categories' %}" class="menu-link">
+            <span>📦</span> Categorias
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'products' %}" class="menu-link">
+            <span>🛒</span> Produtos
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'orders' %}" class="menu-link">
+            <span>📑</span> Pedidos
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'transmission' %}" class="menu-link">
+            <span>📡</span> Transmissão
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'messages' %}" class="menu-link">
+            <span>✉️</span> Mensagens
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'users' %}" class="menu-link">
+            <span>👤</span> Usuários
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'payment' %}" class="menu-link">
+            <span>💳</span> Pagamento
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <h1>Clientes</h1>
+        <p>Gerencie e organize seus clientes.</p>
+      </header>
+
+      <section class="table-container">
+        <input type="text" class="search-bar" placeholder="🔍 Buscar cliente">
+
+        <table class="client-table">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Telefone</th>
+              <th>Cidade</th>
+              <th>Endereço</th>
+              <th>Ativo</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Example rows (you can replace this with dynamic content later) -->
+            <tr>
+              <td>Eduardo Longen Corrêa</td>
+              <td>(45) 99950-1020</td>
+              <td>Toledo</td>
+              <td>Ap. 20, Rua Guarani, 725, Centro, Toledo, Paraná</td>
+              <td>Ativo</td>
+              <td>
+                <button class="edit-btn">✏️</button>
+                <button class="delete-btn">🗑️</button>
+              </td>
+            </tr>
+            <!-- Additional rows... -->
+          </tbody>
+        </table>
+
+        <div class="pagination">
+          <button class="pagination-btn">Anterior</button>
+          <span class="page-indicator">Página 1 de 10</span>
+          <button class="pagination-btn">Próxima</button>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+
+</html>

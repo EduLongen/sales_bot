@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usuários</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'dashboard/css/users.css' %}">
+</head>
+
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <div class="logo">
+        <h2>Dashboard</h2>
+      </div>
+      <ul class="menu">
+        <li class="menu-item">
+          <a href="{% url 'dashboard' %}" class="menu-link">
+            <span>⚡</span> Dashboard
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'clients' %}" class="menu-link">
+            <span>👥</span> Clientes
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'categories' %}" class="menu-link">
+            <span>📦</span> Categorias
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'products' %}" class="menu-link">
+            <span>🛒</span> Produtos
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'orders' %}" class="menu-link">
+            <span>📑</span> Pedidos
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'transmission' %}" class="menu-link">
+            <span>📡</span> Transmissão
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'messages' %}" class="menu-link">
+            <span>✉️</span> Mensagens
+          </a>
+        </li>
+        <li class="menu-item active">
+          <a href="{% url 'users' %}" class="menu-link">
+            <span>👤</span> Usuários
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'payment' %}" class="menu-link">
+            <span>💳</span> Pagamento
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <h1>Usuários</h1>
+        <p>Gerencie os usuários da sua plataforma.</p>
+      </header>
+
+      <!-- Search bar with add button -->
+      <section class="table-container">
+        <div class="search-container">
+          <input type="text" class="search-bar" placeholder="🔍 Buscar usuário">
+          <a href="{% url 'add_user' %}" class="add-user-btn">Adicionar Usuário</a>
+        </div>
+
+        <table class="usuario-table">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Username</th>
+              <th>Cargo</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Eduardo Longen Corrêa</td>
+              <td>Eduardo</td>
+              <td>Administrador</td>
+              <td>
+                <button class="edit-btn">✏️</button>
+                <button class="delete-btn">🗑️</button>
+              </td>
+            </tr>
+            <!-- Repeat other user entries as needed -->
+          </tbody>
+        </table>
+
+        <div class="pagination">
+          <button class="pagination-btn">Anterior</button>
+          <span class="page-indicator">Página 1 de 10</span>
+          <button class="pagination-btn">Próxima</button>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+
+</html>
