@@ -59,6 +59,14 @@
             <span>💳</span> Pagamento
           </a>
         </li>
+        <li class="menu-item">
+          <form action="{% url 'logout' %}" method="post" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="menu-link logout-button">
+                  <span>⬅️</span> Logout
+              </button>
+          </form>
+        </li>
       </ul>
     </aside>
 
@@ -75,7 +83,7 @@
         </div>
 
         <div class="form-actions">
-          <button type="submit" class="submit-btn">Adicionar Mensagem</button>
+          <button type="submit" class="add-message-btn">Adicionar Mensagem</button>
           <a href="{% url 'messages' %}" class="back-btn">Voltar</a>
         </div>
       </form>

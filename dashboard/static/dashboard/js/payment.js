@@ -10,10 +10,10 @@ function showPaymentModal() {
 // Function to hide the modal and redirect
 function hidePaymentModalAndRedirect() {
   paymentModal.style.display = 'none';
-  window.location.href = 'payment.html';
+  window.location.href = '/dashboard/payment/';
 }
 
-// Handle "Adicionar Produto" button click
+// Handle "Adicionar Pagamento" button click
 document.querySelector('.submit-btn').addEventListener('click', function(event) {
   event.preventDefault(); 
   showPaymentModal();

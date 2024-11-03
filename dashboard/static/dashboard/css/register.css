@@ -175,270 +175,143 @@
 
 
 /* General styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
   font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", sans-serif;
-  background-color: var(--gray-50);
-  color: var(--gray-900);
-}
-
-/* Dashboard layout */
-.dashboard-container {
-  display: flex;
-  height: 100vh;
-}
-
-/* Sidebar styles */
-.sidebar {
-  width: 250px;
-  background-color: var(--gray-100);
-  padding: 24px;
-  border-right: 1px solid var(--gray-200);
-}
-
-.logo {
-  text-align: center;
-  margin-bottom: 32px;
-}
-
-.menu {
-  list-style: none;
-}
-
-.menu-link {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
-  width: 100%;
-  padding: 12px 16px;
-  border-radius: 8px;
-}
-
-/* Menu item styling */
-.menu-item {
-  margin-bottom: 8px;
-  font-size: 16px;
-  color: var(--gray-900);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.4s ease;
-}
-
-.menu-item:hover .menu-link {
-  background-color: var(--gray-200); 
-  transition: background-color 0.4s ease;
-  color: var(--gray-900); 
-}
-
-.menu-item.active .menu-link {
-  background-color: var(--gray-600);
-  color: var(--gray-25);
-}
-
-.menu-link span {
-  margin-right: 10px;
-}
-
-/* Main content */
-.main-content {
-  flex-grow: 1;
-  padding: 32px;
-  background-color: var(--gray-50);
-}
-
-.header {
-  margin-bottom: 32px;
-}
-
-.header h1 {
-  font-size: 24px;
-  margin-bottom: 8px;
-  color: var(--gray-900);
-}
-
-.header p {
-  font-size: 16px;
-  color: var(--gray-600);
-}
-
-/* Search Bar */
-.search-bar {
-  width: 100%;
-  height: 44px;
-  padding: 12px;
-  border: 1px solid var(--gray-300);
-  border-radius: 8px;
-  margin-bottom: 24px;
-  font-size: 16px;
-}
-
-/* Client Table */
-.table-container {
-  margin-top: 24px;
-}
-
-.client-table {
-  width: 100%;
-  border-collapse: separate; 
-  border-spacing: 0;
-  border-radius: 8px;
-  overflow: hidden; 
-}
-
-.client-table th, .client-table td {
-  padding: 16px;
-  text-align: left;
-}
-
-.client-table th {
-  background-color: var(--gray-100);
-  font-weight: bold;
-  color: var(--gray-800);
-}
-
-.client-table td {
-  background-color: var(--gray-0);
-  color: var(--gray-900);
-}
-
-/* .client-table tbody tr:nth-child(even) {
-  background-color: var(--gray-300);
-} */
-
-/* .client-table tbody tr:nth-child(odd) {
-  background-color: var(--gray-0);
-} */
-
-.client-table td, .client-table th {
-  border-bottom: 1px solid var(--gray-200);
-}
-
-.message-table td:nth-child(4) {
-  white-space: nowrap;    
-  overflow: hidden;        
-  text-overflow: ellipsis;  
-  max-width: 300px;
-}
-
-/* Define column widths as percentages */
-.client-table th:nth-child(1), 
-.client-table td:nth-child(1) {
-  width: 16%; /* Nome */
-}
-
-.client-table th:nth-child(2), 
-.client-table td:nth-child(2) {
-  width: 12%; /* Telefone */
-}
-
-.client-table th:nth-child(3), 
-.client-table td:nth-child(3) {
-  width: 16%; /* Cidade */
-}
-
-.client-table th:nth-child(4), 
-.client-table td:nth-child(4) {
-  width: 40%; /* Endereço */
-}
-
-.client-table th:nth-child(5), 
-.client-table td:nth-child(5) {
-  width: 8%; /* Ativo */
-}
-
-.client-table th:nth-child(6), 
-.client-table td:nth-child(6) {
-  width: 8%; /* Ações */
-  text-align: left;
-}
-
-/* Button styles */
-button {
-  border: none;
-  padding: 8px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.edit-btn, .delete-btn {
-  background-color: var(--gray-0);
-  color: var(--gray-900);
-}
-
-.edit-btn:hover, .delete-btn:hover {
-  background-color: var(--gray-100); 
-  transition: background-color 0.4s ease;
-}
-
-/* Pagination */
-.pagination {
-  margin-top: 16px;
+  background-color: var(--gray-50); 
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 16px;
+  height: 100vh;
+  margin: 0;
 }
 
-.pagination-btn {
-  background-color: var(--gray-100);
-  color: var(--gray-900);
-  padding: 8px 16px;
-  border-radius: 8px;
-  border: 1px solid var(--gray-200);
+.login-container {
+  max-width: 400px;
+  width: 100%;
+  background-color: var(--gray-10); 
+  padding: 32px; 
+  border-radius: 16px;
+  box-shadow: 0 2px 4px var(--gray-300);
 }
 
-.pagination-btn:hover {
-  background-color: var(--gray-200); 
-  transition: background-color 0.4s ease;
-  color: var(--gray-900);
+h2 {
+  font-size: 24px;
+  margin-bottom: 16px;
+  color: var(--gray-900); 
+  text-align: center; 
+}
+
+p {
+  text-align: center; 
+  margin-bottom: 24px;
+  color: var(--gray-600); 
+  font-size: 18px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+  text-align: left; 
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: var(--gray-900); 
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+button[type="submit"] {
+  width: 100%; 
+  height: 44px;
+  padding: 10px 14px;
+  font-size: 14px;
   border: 1px solid var(--gray-300); 
+  border-radius: 8px;
+  background-color: #fff;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box; 
 }
 
-.page-indicator {
-  font-size: 16px;
-  color: var(--gray-600);
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="password"]:focus {
+  border-color: var(--blue-500); 
+  outline: none;
 }
 
-.logout-button {
-  background: none;
-  border: none;
-  color: inherit;
-  cursor: pointer;
-  font-size: 16px;
-  padding: 12px 16px;
+.form-group input[type="checkbox"] {
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.form-group label[for="checkbox"] {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.checkbox-group {
   display: flex;
   align-items: center;
-  width: 100%;
-  text-align: left;
+  justify-content: flex-start;
 }
 
-.logout-button:hover {
-  background-color: var(--gray-200);
-  transition: background-color 0.4s ease;
-  color: var(--gray-900);
+.button-link {
+  display: block;
+  text-decoration: none; 
 }
 
-.menu-item.active .logout-button {
-  background-color: var(--gray-600);
-  color: var(--gray-25);
+/* Apply button styling as before */
+button[type="submit"] {
+  background-color: var(--blue-500); 
+  color: var(--gray-50); 
+  font-size: 16px;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%; 
+  box-sizing: border-box;
+  margin-top: 0px; 
 }
 
-/* Responsive behavior */
+/* Hover effect */
+button[type="submit"]:hover {
+  background-color: var(--blue-600); 
+}
+
+/* Disabled state */
+button[type="submit"]:disabled {
+  background-color: var(--gray-300); 
+  cursor: not-allowed;
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 24px;
+  margin-bottom: 0px;
+  color: var(--gray-600); 
+  font-size: 16px !important;
+}
+
+.register-link-action {
+  color: var(--blue-800); 
+  text-decoration: none;
+  font-weight: 500; 
+  transition: color 0.3s ease; 
+}
+
+/* Hover effect for link */
+.register-link-action:hover {
+  color: var(--blue-600); 
+  text-decoration: underline; 
+}
+
 @media (max-width: 768px) {
-  .client-table {
-    font-size: 14px;
-  }
-
-  .pagination {
-    flex-direction: column;
-    gap: 8px;
+  .login-container {
+    padding: 16px; 
   }
 }
-

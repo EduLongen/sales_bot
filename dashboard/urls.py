@@ -1,8 +1,10 @@
 from django.urls import path
 from . import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('', views.dashboard, name='dashboard'),  # Dashboard root
+    path('register/', views.register, name='register'),
     path('add_category/', views.add_category, name='add_category'),
     path('add_message/', views.add_message, name='add_message'),
     path('add_product/', views.add_product, name='add_product'),
@@ -15,4 +17,5 @@ urlpatterns = [
     path('products/', views.products, name='products'),
     path('transmission/', views.transmission, name='transmission'),
     path('users/', views.users_list, name='users'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 ]

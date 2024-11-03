@@ -30,6 +30,7 @@ ALLOWED_HOSTS = []
 
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGIN_URL = '/login/'  # URL where Django sends unauthenticated users
+LOGOUT_REDIRECT_URL = '/login/'
 
 
 # Application definition
