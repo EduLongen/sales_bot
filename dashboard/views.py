@@ -81,8 +81,8 @@ def register(request):
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password'])
             user.save()
-            login(request, user) 
-            return redirect('dashboard')  
+            login(request, user)
+            return redirect('dashboard') 
     else:
         form = RegisterForm()
     return render(request, 'dashboard/register.html', {'form': form})

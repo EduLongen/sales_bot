@@ -19,38 +19,38 @@
 
       <div class="form-group">
         <label for="username">Username</label>
-        <input type="text" name="username" id="username" placeholder="Insira seu username" required>
+        {{ form.username }}
+        {% if form.username.errors %}
+          <div class="error-message">{{ form.username.errors.0 }}</div>
+        {% endif %}
       </div>
 
       <div class="form-group">
         <label for="email">Email address</label>
-        <input type="email" name="email" id="email" placeholder="Insira seu email" required>
+        {{ form.email }}
+        {% if form.email.errors %}
+          <div class="error-message">{{ form.email.errors.0 }}</div>
+        {% endif %}
       </div>
 
       <div class="form-group">
-        <label for="password1">Password</label>
-        <input type="password" name="password1" id="password1" placeholder="Insira sua senha" required>
+        <label for="password">Password</label>
+        {{ form.password }}
+        {% if form.password.errors %}
+          <div class="error-message">{{ form.password.errors.0 }}</div>
+        {% endif %}
       </div>
 
       <div class="form-group">
-        <label for="password2">Confirm Password</label>
-        <input type="password" name="password2" id="password2" placeholder="Confirme sua senha" required>
+        <label for="password_confirm">Confirm Password</label>
+        {{ form.password_confirm }}
+        {% if form.password_confirm.errors %}
+          <div class="error-message">{{ form.password_confirm.errors.0 }}</div>
+        {% endif %}
       </div>
 
       <button type="submit">Registrar</button>
     </form>
-
-    {% if form.errors %}
-    <div class="errors">
-      <ul>
-        {% for field in form %}
-        {% for error in field.errors %}
-        <li>{{ error }}</li>
-        {% endfor %}
-        {% endfor %}
-      </ul>
-    </div>
-    {% endif %}
 
     <p class="register-link">Já tem uma conta? <a href="{% url 'login' %}" class="register-link-action">Entrar</a></p>
   </div>
