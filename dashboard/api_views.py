@@ -1,5 +1,6 @@
 # In api_views.py
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 from .models import User, Client, Category, Product, Order, OrderItem, Message, PixPayment, JWT
 from .serializers import (
     UserSerializer, ClientSerializer, CategorySerializer, ProductSerializer,
@@ -9,6 +10,7 @@ from .serializers import (
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
 
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = Client.objects.all()

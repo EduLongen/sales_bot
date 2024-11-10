@@ -310,6 +310,42 @@ button[type="submit"]:disabled {
   text-decoration: underline; 
 }
 
+.messages {
+  list-style: none;
+  margin: 1em 0 2em;
+  padding: 0;
+  text-align: center; /* Ensure alignment looks good */
+}
+
+.messages li {
+  padding: 1em;
+  width: 100%;
+  line-height: 2.0em;
+  border-radius: 5px; /* Consistent design */
+  margin-bottom: 10px; /* Space between messages */
+  font-size: 16px; /* Readable font size */
+}
+
+.messages li.info, .messages li.debug {
+  background-color: #d0ebff;
+  color: #0b5394;
+}
+
+.messages li.success {
+  background-color: #b2f2bb;
+  color: #2f8f46;
+}
+
+.messages li.warning {
+  background-color: #ffec99;
+  color: #9c5700;
+}
+
+.messages li.error {
+  background-color: #ffe3e3;
+  color: #d32f2f;
+}
+
 @media (max-width: 768px) {
   .login-container {
     padding: 16px; 

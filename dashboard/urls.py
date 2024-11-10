@@ -30,7 +30,11 @@ urlpatterns = [
     path('payment/', views.payment_page, name='payment'),
     path('products/', views.products, name='products'),
     path('transmission/', views.transmission, name='transmission'),
+    
     path('users/', views.users_list, name='users'),
+    # Add other user-related views here
+    path('users/<int:user_id>/edit/', views.edit_user, name='edit_user'),  # Edit user URL
+    path('users/<int:user_id>/delete/', views.delete_user, name='delete_user'),  # Delete user URL
 
     # Authentication routes
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),

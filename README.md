@@ -56,19 +56,25 @@ Ensure you have the following installed:
    pip install -r requirements.txt
    ```
 
-5. Apply migrations to set up the database:
+5. Create the database:
+
+   ```bash
+   CREATE DATABASE sales_bot_db;
+   ```
+
+6. Apply migrations to set up the database:
 
    ```bash
    python manage.py migrate
    ```
 
-6. Run the development server:
+7. Run the development server:
 
    ```bash
    python manage.py runserver
    ```
 
-7. Access the application at http://127.0.0.1:8000/
+8. Access the application at http://127.0.0.1:8000/
 
 ### File Structure
 - **dashboard/**: Contains all views, URLs, templates, and static files (CSS, JS).*

@@ -1,13 +1,18 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from .forms import RegisterForm
-from django.shortcuts import redirect
-from django.contrib import messages
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import update_session_auth_hash
+from django.http import HttpResponseForbidden
+from django.http import HttpResponse
+from django.contrib import messages
+from django.shortcuts import redirect
+from .forms import RegisterForm
+from .forms import EditUserForm
+from .models import User
 
 @login_required
 def dashboard(request):
-    return render(request, 'dashboard/dashboard.html')
+    return render(request, 'dashboard/dashboard.html', {'user': request.user})
 
 @login_required
 def add_category(request):
@@ -55,7 +60,8 @@ def transmission(request):
 
 @login_required
 def users_list(request):
-    return render(request, 'dashboard/users.html')
+    users = User.objects.all()  # Fetch all users
+    return render(request, 'dashboard/users.html', {'users': users})
 
 def user_login(request):
     if request.method == 'POST':
@@ -78,11 +84,48 @@ def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])  # Hash the password
-            user.save()
-            login(request, user)  # Log in the user after registration
-            return redirect('dashboard')  # Redirect after successful registration
+            user = form.save()
+            if user.is_superuser:
+                messages.success(request, 'Conta de super usuário criada com sucesso.')
+            else:
+                messages.success(request, 'Conta de usuário criada com sucesso.')
+            return redirect('login')
     else:
         form = RegisterForm()
     return render(request, 'dashboard/register.html', {'form': form})
+
+@login_required
+def edit_user(request, user_id):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("You are not allowed to edit other users.")
+    
+    user = get_object_or_404(User, pk=user_id)
+    
+    if request.method == 'POST':
+        form = EditUserForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "User updated successfully.")
+            return redirect('users')
+    else:
+        form = EditUserForm(instance=user)
+    
+    return render(request, 'dashboard/edit_user.html', {'form': form, 'user': user})
+
+@login_required
+def delete_user(request, user_id):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("You are not allowed to delete users.")
+    
+    user_to_delete = get_object_or_404(User, id=user_id)
+
+    if user_to_delete.is_superuser:
+        messages.error(request, "Super usuário não pode ser excluído. 😱")
+        return redirect('users')
+
+    if request.method == 'POST':
+        user_to_delete.delete()
+        messages.success(request, "User deleted successfully.")
+        return redirect('users')
+
+    return redirect('users')
