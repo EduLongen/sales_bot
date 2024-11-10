@@ -74,9 +74,9 @@
 
     <main class="main-content">
       <header class="header">
-        <h1>Bem Vindo, Felipe</h1>
+        <h1>Bem Vindo, {{ user.first_name|default:user.username }}</h1>
         <p>Acompanhe e organize seus pedidos e clientes.</p>
-      </header>
+    </header>    
 
       <section class="stats">
         <div class="card">

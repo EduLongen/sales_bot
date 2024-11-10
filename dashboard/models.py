@@ -6,6 +6,7 @@ class User(AbstractUser):
         ('administrator', 'Administrator'),
         ('moderator', 'Moderator'),
     ]
+
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='moderator')
     is_active = models.BooleanField(default=True)
 

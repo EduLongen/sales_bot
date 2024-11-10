@@ -10,6 +10,17 @@
 </head>
 
 <body>
+
+	{% if messages %}
+	<div class="messages-container">
+		<ul class="messages">
+			{% for message in messages %}
+			<li class="{{ message.tags }}">{{ message }}</li>
+			{% endfor %}
+		</ul>
+	</div>
+	{% endif %}
+
 	<div class="login-container">
 		<h2>Acesse a sua conta</h2>
 		<p>Bem vindo de volta! Entre com seus dados.</p>
@@ -38,16 +49,6 @@
 		<p class="register-link">Não tem uma conta? <a href="{% url 'register' %}" class="register-link-action">Registre-se
 				aqui</a></p>
 
-		<!-- Display error messages if login fails -->
-		{% if messages %}
-		<div class="errors">
-			<ul>
-				{% for message in messages %}
-				<li>{{ message }}</li>
-				{% endfor %}
-			</ul>
-		</div>
-		{% endif %}
 	</div>
 </body>
 
