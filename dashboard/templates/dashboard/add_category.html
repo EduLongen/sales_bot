@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Adicionar Nova Categoria</title>
-  {% load static %}  <!-- Load static files -->
+  {% load static %}
   <link rel="stylesheet" href="{% static 'dashboard/css/add_category.css' %}">
 </head>
 <body>
@@ -76,34 +76,30 @@
       </header>
 
       <section class="form-container">
-        <!-- Form for adding category -->
         <form method="POST" action="{% url 'add_category' %}">
           {% csrf_token %}
           <div class="form-group">
-            <label for="categoria-nome">Nome:</label>
-            <input type="text" id="categoria-nome" name="category_name" placeholder="Digite o nome da categoria" required>
+            {{ form.as_p }}  <!-- Os campos do formulário renderizados com o estilo do Django -->
           </div>
-        
+
           <div class="button-group">
             <button type="submit" class="add-category-btn">Adicionar Categoria</button>
             <a href="{% url 'categories' %}" class="back-btn">Voltar</a>
-          </div>          
+          </div>
         </form>
-        
       </section>
     </main>
   </div>
-</body>
 
-<!-- Modal Structure for Success -->
-<div id="categoryModal" class="modal">
-  <div class="modal-content">
-    <h2>Categoria Adicionada!</h2>
-    <p>A nova categoria foi adicionada com sucesso.</p>
-    <button id="closeCategoryModal" class="modal-btn">OK</button>
+  <!-- Estrutura do Modal para Sucesso -->
+  <div id="categoryModal" class="modal">
+    <div class="modal-content">
+      <h2>Categoria Adicionada!</h2>
+      <p>A nova categoria foi adicionada com sucesso.</p>
+      <button id="closeCategoryModal" class="modal-btn">OK</button>
+    </div>
   </div>
-</div>
 
-<script src="{% static 'dashboard/js/add_category.js' %}"></script>
-
+  <script src="{% static 'dashboard/js/add_category.js' %}"></script>
+</body>
 </html>

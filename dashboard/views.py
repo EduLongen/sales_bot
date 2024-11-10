@@ -6,9 +6,8 @@ from django.http import HttpResponseForbidden
 from django.http import HttpResponse
 from django.contrib import messages
 from django.shortcuts import redirect
-from .forms import RegisterForm
-from .forms import EditUserForm
-from .models import User
+from .forms import RegisterForm, EditUserForm, CategoryForm  
+from .models import User, Category
 
 @login_required
 def dashboard(request):
@@ -16,7 +15,15 @@ def dashboard(request):
 
 @login_required
 def add_category(request):
-    return render(request, 'dashboard/add_category.html')
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Categoria adicionada com sucesso!')
+    else:
+        form = CategoryForm()
+    
+    return render(request, 'dashboard/add_category.html', {'form': form})
 
 @login_required
 def add_message(request):
@@ -32,7 +39,8 @@ def add_user(request):
 
 @login_required
 def categories_list(request):
-    return render(request, 'dashboard/categories.html')
+    categories = Category.objects.all()  # Fetch all categories
+    return render(request, 'dashboard/categories.html', {'categories': categories})
 
 @login_required
 def clients_list(request):
