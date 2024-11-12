@@ -9,6 +9,8 @@ from django.shortcuts import redirect
 from .forms import RegisterForm
 from .forms import EditUserForm
 from .models import User
+from .forms import MessageForm
+from .models import Message
 
 @login_required
 def dashboard(request):
@@ -129,3 +131,43 @@ def delete_user(request, user_id):
         return redirect('users')
 
     return redirect('users')
+
+@login_required
+def messages_list(request):
+    messages = Message.objects.all().order_by('-created_at')
+    return render(request, 'dashboard/messages.html', {'messages': messages})
+
+@login_required
+def add_message(request):
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.admin = request.user
+            message.save()
+            messages.success(request, 'Mensagem adicionada com sucesso!')
+            return redirect('messages') 
+        else:
+            messages.error(request, 'Erro ao adicionar a mensagem. Tente novamente.')
+    else:
+        form = MessageForm()
+
+    return render(request, 'dashboard/add_message.html', {'form': form})
+
+@login_required
+def delete_message(request, message_id):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("Você não tem permissão para deletar mensagens.")
+
+    message_to_delete = get_object_or_404(Message, id=message_id)
+
+    if message_to_delete.admin == request.user:
+        messages.error(request, "Você não pode excluir sua própria mensagem.")
+        return redirect('messages')  
+
+    if request.method == 'POST':
+        message_to_delete.delete()
+        messages.success(request, "Mensagem deletada com sucesso.")
+        return redirect('messages')
+
+    return render(request, 'dashboard/confirm_delete_message.html', {'message': message_to_delete})

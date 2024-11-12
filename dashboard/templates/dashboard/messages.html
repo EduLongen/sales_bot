@@ -73,6 +73,18 @@
     </aside>
 
     <main class="main-content">
+
+      {% if messages %}
+      <div class="messages-container">
+        <ul class="messages">
+          {% for message in messages %}
+          <li class="{{ message.tags }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+
+      <!-- Header -->
       <header class="header">
         <h1>Mensagens</h1>
         <p>Gerencie suas mensagens.</p>
@@ -84,74 +96,35 @@
           <input type="text" class="search-bar" placeholder="🔍 Buscar mensagem">
           <a href="{% url 'add_message' %}" class="add-product-btn">Adicionar Mensagem</a>
         </div>
-
-        <table class="message-table">
-          <thead>
-            <tr>
-              <th>Descrição</th>
-              <th>Texto</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Início</td>
-              <td>Loja online :)</td>
-              <td>
-                <button class="edit-btn">✏️</button>
-                <button class="delete-btn">🗑️</button>
-              </td>
-            </tr>
-            <tr>
-              <td>Pedido</td>
-              <td>Pedido criado. Seu pedido será preparado e entregue no seu endereço. O tempo estimado de entrega é de 30 a 45 minutos.</td>
-              <td>
-                <button class="edit-btn">✏️</button>
-                <button class="delete-btn">🗑️</button>
-              </td>
-            </tr>
-            <tr>
-              <td>Criado</td>
-              <td>&lt;b&gt;Carrinho&lt;/b&gt;: -Nome: %PRODUCT_NAME%, -Descrição: %PRODUCT_DESCRIPTION%, Preço: %PRODUCT_PRICE% un. * %PRODUCT_QUANTITY% total = %PRODUCT_TOTAL_PRICE% R$.</td>
-              <td>
-                <button class="edit-btn">✏️</button>
-                <button class="delete-btn">🗑️</button>
-              </td>
-            </tr>
-            <tr>
-              <td>Promoção</td>
-              <td>Não perca! Temos uma oferta especial em todas as pizzas. Compre uma pizza e leve outra pela metade do preço! Oferta válida até o final do mês.</td>
-              <td>
-                <button class="edit-btn">✏️</button>
-                <button class="delete-btn">🗑️</button>
-              </td>
-            </tr>
-            <tr>
-              <td>Lembrete</td>
-              <td>Sua assinatura está prestes a expirar. Renove sua assinatura hoje para continuar desfrutando de nossos serviços premium sem interrupções.</td>
-              <td>
-                <button class="edit-btn">✏️</button>
-                <button class="delete-btn">🗑️</button>
-              </td>
-            </tr>
-            <tr>
-              <td>Agradecimento</td>
-              <td>Obrigado pela sua compra! Esperamos que você aproveite sua refeição. Não se esqueça de nos avaliar e nos dizer como foi sua experiência!</td>
-              <td>
-                <button class="edit-btn">✏️</button>
-                <button class="delete-btn">🗑️</button>
-              </td>
-            </tr>
-            <tr>
-              <td>Solicitação de Feedback</td>
-              <td>Valorizamos sua opinião! Por favor, tire um momento para avaliar seu pedido recente e compartilhar qualquer feedback para nos ajudar a melhorar nossos serviços.</td>
-              <td>
-                <button class="edit-btn">✏️</button>
-                <button class="delete-btn">🗑️</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        
+        <section class="table-container">
+          <table class="message-table">
+            <thead>
+              <tr>
+                <th>Descrição</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for message in messages %}
+              <tr>
+                <td>{{ message.content }}</td>
+                <td>
+                  <button class="edit-btn">✏️</button>
+                  <form action="{% url 'delete_message' message.id %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="delete-btn">🗑️</button>
+                  </form>
+                </td>
+              </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="2" class="no-messages">Não há mensagens disponíveis.</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        
 
         <div class="pagination">
           <button class="pagination-btn">Anterior</button>

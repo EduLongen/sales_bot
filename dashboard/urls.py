@@ -35,6 +35,8 @@ urlpatterns = [
     # Add other user-related views here
     path('users/<int:user_id>/edit/', views.edit_user, name='edit_user'),  # Edit user URL
     path('users/<int:user_id>/delete/', views.delete_user, name='delete_user'),  # Delete user URL
+    path('messages/delete/<int:message_id>/', views.delete_message, name='delete_message'), # Delete message URL
+
 
     # Authentication routes
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),

@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django import forms
-from .models import User
+from .models import User, Message
 
 User = get_user_model()
 
@@ -48,3 +48,16 @@ class EditUserForm(forms.ModelForm):
         if User.objects.filter(username=username).exclude(pk=self.instance.pk).exists():
             raise forms.ValidationError("A user with that username already exists.")
         return username
+
+
+class MessageForm(forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = ['content']  # Mantenha apenas o campo 'content'
+        widgets = {
+            'content': forms.Textarea(attrs={
+                'rows': 5,
+                'cols': 60,
+                'placeholder': 'Digite sua mensagem aqui...',
+            }),
+        }
