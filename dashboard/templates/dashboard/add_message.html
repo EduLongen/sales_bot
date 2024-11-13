@@ -91,18 +91,20 @@
           </ul>
         </div>
 
-      <form method="post" action="{% url 'add_message' %}">
-        {% csrf_token %}
-        <div class="form-group">
-          <label for="id_content">Mensagem:</label>
-          {{ form.content }}
-        </div>
-
-        <div class="form-actions">
-          <button type="submit" class="submit-bnt">Adicionar Mensagem</button>
-          <a href="{% url 'messages' %}" class="back-btn">Voltar</a>
-        </div>
+        <form method="post" action="{% url 'add_message' %}">
+          {% csrf_token %}
+      
+          <div class="form-group">
+              <label for="id_description">Mensgagem:</label>
+              {{ form.content }}
+          </div>
+      
+          <div class="form-actions">
+              <button type="submit" class="submit-btn">Adicionar Mensagem</button>
+              <a href="{% url 'messages' %}" class="back-btn">Voltar</a>
+          </div>
       </form>
+       
 
       <!-- Modal Structure -->
       <div id="messageModal" class="modal">

@@ -141,6 +141,7 @@ def messages_list(request):
 def add_message(request):
     if request.method == 'POST':
         form = MessageForm(request.POST)
+        
         if form.is_valid():
             message = form.save(commit=False)
             message.admin = request.user
@@ -175,19 +176,14 @@ def edit_message(request, message_id):
 
 @login_required
 def delete_message(request, message_id):
+    message_to_delete = get_object_or_404(Message, id=message_id)
     
-    if not request.user.is_superuser:
-        message_to_delete = get_object_or_404(Message, id=message_id)
-        
-        if message_to_delete.user != request.user:
-            messages.error(request, "Você não tem permissão para excluir esta mensagem.")
-            return redirect('messages')
-    else:
-        message_to_delete = get_object_or_404(Message, id=message_id)
-    
+    if not request.user.is_superuser and message_to_delete.user != request.user:
+        messages.error(request, "Você não tem permissão para excluir esta mensagem.")
+        return redirect('messages')  
+
     if request.method == 'POST':
         message_to_delete.delete()
         messages.success(request, "Mensagem deletada com sucesso.")
         return redirect('messages')
-
     return redirect('messages')

@@ -53,11 +53,12 @@ class EditUserForm(forms.ModelForm):
 class MessageForm(forms.ModelForm):
     class Meta:
         model = Message
-        fields = ['content']  # Mantenha apenas o campo 'content'
+        fields = ['name', 'description', 'content'] 
         widgets = {
             'content': forms.Textarea(attrs={
                 'rows': 5,
                 'cols': 60,
                 'placeholder': 'Digite sua mensagem aqui...',
             }),
+            'created_at': forms.TextInput(attrs={'readonly': 'readonly'}),  
         }

@@ -46,7 +46,7 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    image_url = models.URLField(max_length=255)
+    image_url = models.CharField(max_length=255, default='default_image_url.jpg')
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=255, blank=True, default="No description")  # Default value added
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='products')
@@ -87,7 +87,7 @@ class OrderItem(models.Model):
 class Message(models.Model):
     name = models.TextField(max_length=255, blank=True, null=True)
     description = models.TextField(max_length=255, blank=True, null=True)
-    text = models.TextField(max_length=2000, blank=True, null=True)
+    content = models.TextField(max_length=2000, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
