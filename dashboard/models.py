@@ -27,6 +27,7 @@ class User(AbstractUser):
 
 class Client(models.Model):
     name = models.CharField(max_length=100)
+    chat_id = models.BigIntegerField(blank=True, null=False)
     phone = models.CharField(max_length=20)
     city = models.CharField(max_length=100, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
@@ -38,7 +39,7 @@ class Client(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, related_name='subcategories')
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -84,8 +85,9 @@ class OrderItem(models.Model):
 
 
 class Message(models.Model):
-    admin = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, limit_choices_to={'role': 'administrator'})
-    content = models.TextField(max_length=1000)
+    name = models.TextField(max_length=255)
+    description = models.TextField(max_length=255)
+    text = models.TextField(max_length=2000)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -94,6 +96,7 @@ class Message(models.Model):
 
 class PixPayment(models.Model):
     pix_key = models.CharField(max_length=50)
+    description = models.TextField(max_length=255)
     qr_code_url = models.URLField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
