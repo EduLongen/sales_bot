@@ -39,25 +39,25 @@ class Client(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, related_name='subcategories')
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
 
 
 class Product(models.Model):
-    image_url = models.URLField(max_length=255, blank=True, null=True)
+    image_url = models.URLField(max_length=255)
     name = models.CharField(max_length=100)
-    description = models.TextField(blank=True, null=True)
+    description = models.TextField(max_length=255, blank=True, default="No description")  # Default value added
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='products')
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # Default added to avoid issues
 
     def __str__(self):
         return self.name
 
 
 class Order(models.Model):
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, default=1)  # Replace `1` with a valid client ID
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True)  # Default removed, handle client manually
     status = models.CharField(
         max_length=20,
         choices=[
@@ -77,24 +77,26 @@ class Order(models.Model):
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.PositiveIntegerField(default=1)  # Default value for quantity
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # Default value for price
 
     def __str__(self):
         return f"{self.product.name} ({self.quantity})"
 
 
 class Message(models.Model):
-    admin = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, limit_choices_to={'role': 'administrator'})
-    content = models.TextField(max_length=1000)
+    name = models.TextField(max_length=255, blank=True, null=True)
+    description = models.TextField(max_length=255, blank=True, null=True)
+    text = models.TextField(max_length=2000, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Message by {self.admin.username} at {self.created_at}"
+        return f"Message at {self.created_at}"
 
 
 class PixPayment(models.Model):
     pix_key = models.CharField(max_length=50)
+    description = models.TextField(max_length=255, blank=True, null=True)
     qr_code_url = models.URLField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
