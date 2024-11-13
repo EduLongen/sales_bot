@@ -25,7 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
-        fields = ['id', 'name', 'phone', 'city', 'address', 'is_active']
+        fields = ['id', 'chat_id', 'name', 'phone_number', 'city', 'address', 'is_active']
 
 
 class CategorySerializer(serializers.ModelSerializer):
