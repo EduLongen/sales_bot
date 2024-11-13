@@ -134,8 +134,8 @@ def delete_user(request, user_id):
 
 @login_required
 def messages_list(request):
-    messages = Message.objects.all().order_by('-created_at')
-    return render(request, 'dashboard/messages.html', {'messages': messages})
+    mensagens2 = Message.objects.all().order_by('-created_at')  # Fetch all messages
+    return render(request, 'dashboard/messages.html', {'mensagens2': mensagens2})
 
 @login_required
 def add_message(request):
@@ -155,19 +155,39 @@ def add_message(request):
     return render(request, 'dashboard/add_message.html', {'form': form})
 
 @login_required
+def edit_message(request, message_id):
+    message = get_object_or_404(Message, id=message_id)
+    
+    if not request.user.is_superuser and message.user != request.user:
+        messages.error(request, "Você não tem permissão para editar esta mensagem.")
+        return redirect('messages')
+    
+    if request.method == 'POST':
+        form = MessageForm(request.POST, instance=message)  
+        if form.is_valid():
+            form.save()  # Salva as alterações
+            messages.success(request, "Mensagem atualizada com sucesso.")
+            return redirect('messages')
+    else:
+        form = MessageForm(instance=message)  
+
+    return render(request, 'dashboard/edit_message.html', {'form': form, 'message': message})
+
+@login_required
 def delete_message(request, message_id):
+    
     if not request.user.is_superuser:
-        return HttpResponseForbidden("Você não tem permissão para deletar mensagens.")
-
-    message_to_delete = get_object_or_404(Message, id=message_id)
-
-    if message_to_delete.admin == request.user:
-        messages.error(request, "Você não pode excluir sua própria mensagem.")
-        return redirect('messages')  
-
+        message_to_delete = get_object_or_404(Message, id=message_id)
+        
+        if message_to_delete.user != request.user:
+            messages.error(request, "Você não tem permissão para excluir esta mensagem.")
+            return redirect('messages')
+    else:
+        message_to_delete = get_object_or_404(Message, id=message_id)
+    
     if request.method == 'POST':
         message_to_delete.delete()
         messages.success(request, "Mensagem deletada com sucesso.")
         return redirect('messages')
 
-    return render(request, 'dashboard/confirm_delete_message.html', {'message': message_to_delete})
+    return redirect('messages')

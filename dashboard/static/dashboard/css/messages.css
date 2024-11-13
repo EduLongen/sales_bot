@@ -441,3 +441,186 @@ button {
   background-color: var(--gray-600);
   color: var(--gray-25);
 }
+
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
+  display: none; /* Inicialmente escondido */
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Coloca o modal sobre outros elementos */
+}
+
+/* Modal Container */
+.modal {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  width: 300px;
+  max-width: 100%;
+  text-align: center;
+}
+
+/* Modal Header */
+.modal-header {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* Modal Content */
+.modal-content {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+/* Modal Footer */
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Botões do Modal */
+.confirm-btn, .cancel-btn {
+  padding: 10px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+}
+
+.confirm-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.cancel-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
+  display: none; /* Inicialmente escondido */
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Coloca o modal sobre outros elementos */
+}
+
+/* Modal Container */
+.modal {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  width: 300px;
+  max-width: 100%;
+  text-align: center;
+}
+
+/* Modal Header */
+.modal-header {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* Modal Content */
+.modal-content {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+/* Modal Footer */
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Botões do Modal */
+.confirm-btn, .cancel-btn {
+  padding: 10px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+}
+
+.confirm-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.cancel-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+
+/* Styling for the messages container */
+.messages-container {
+  position: absolute;
+  top: 20px; /* Ensures it's near the top of the page */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 400px; /* Matches form width */
+  text-align: center;
+  z-index: 1000; /* Ensures it's on top of other elements */
+}
+
+.messages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.messages li {
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  font-size: 16px;
+  color: var(--success-700);
+  border: 1px solid var(--success-400);
+  width: 100%;
+}
+
+/* Specific styles based on message types */
+.messages li.success {
+  background-color: var(--success-100);
+  color: var(--success-700);
+  border: 1px solid var(--success-400);
+}
+
+.messages li.error {
+  background-color: var(--error-100);
+  color: var(--error-700);
+  border: 1px solid var(--error-400);
+}
+
+.messages li.info {
+  background-color: var(--blue-100);
+  color: var(--blue-700);
+  border: 1px solid var(--blue-400);
+}
+
+.messages li.warning {
+  background-color: var(--warning-100);
+  color: var(--warning-700);
+  border: 1px solid var(--warning-400);
+}
+

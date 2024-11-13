@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Adicionar Mensagem</title>
+  <title>Editar Usuário</title>
   {% load static %}
-  <link rel="stylesheet" href="{% static 'dashboard/css/add_message.css' %}">
+  <link rel="stylesheet" href="{% static 'dashboard/css/edit_message.css' %}">
 </head>
+
 <body>
   <div class="dashboard-container">
     <aside class="sidebar">
@@ -44,12 +46,12 @@
             <span>📡</span> Transmissão
           </a>
         </li>
-        <li class="menu-item active">
+        <li class="menu-item">
           <a href="{% url 'messages' %}" class="menu-link">
             <span>✉️</span> Mensagens
           </a>
         </li>
-        <li class="menu-item">
+        <li class="menu-item active">
           <a href="{% url 'users' %}" class="menu-link">
             <span>👤</span> Usuários
           </a>
@@ -61,63 +63,49 @@
         </li>
         <li class="menu-item">
           <form action="{% url 'logout' %}" method="post" style="display: inline;">
-              {% csrf_token %}
-              <button type="submit" class="menu-link logout-button">
-                  <span>⬅️</span> Logout
-              </button>
+            {% csrf_token %}
+            <button type="submit" class="menu-link logout-button">
+              <span>⬅️</span> Logout
+            </button>
           </form>
         </li>
       </ul>
     </aside>
 
     <main class="main-content">
-
-      <header class="header">
-        <h1>Adicionar nova mensagem</h1>
-      </header>
-
-      {% if messages %}
-      <div class="messages-container">
-        <ul class="messages">
-          {% for message in messages %}
-          <li class="{{ message.tags }}">{{ message }}</li>
-          {% endfor %}
-        </ul>
-      </div>
-      {% endif %}
-
+        <header class="header">
+            <h1>Editar Mensagem</h1>
+        </header>
+    
+        {% if messages %}
         <div class="messages-container">
           <ul class="messages">
+            {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
           </ul>
         </div>
+        {% endif %}
+    
+        <form method="post" action="{% url 'edit_message' message.id %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_content">Mensagem:</label>
+                {{ form.content }}
+                {% if messages %}
+                    <div class="messages-container">
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    </div>
+                    {% endif %}
 
-      <form method="post" action="{% url 'add_message' %}">
-        {% csrf_token %}
-        <div class="form-group">
-          <label for="id_content">Mensagem:</label>
-          {{ form.content }}
-        </div>
-
-        <div class="form-actions">
-          <button type="submit" class="submit-bnt">Adicionar Mensagem</button>
-          <a href="{% url 'messages' %}" class="back-btn">Voltar</a>
-        </div>
-      </form>
-
-      <!-- Modal Structure -->
-      <div id="messageModal" class="modal">
-        <div class="modal-content">
-          <h2>Mensagem Adicionada!</h2>
-          <p>A nova mensagem foi adicionada com sucesso.</p>
-          <button id="closeMessageModal" class="modal-btn">OK</button>
-        </div>
-      </div>
-
-
-
+            </div>
+            <button type="submit" class="submit-button">Atualizar Mensagem</button>
+            <a href="{% url 'messages' %}" class="back-button">Cancelar</a>
+        </form>
     </main>
-  </div>
-
-  <script src="{% static 'dashboard/js/add_message.js' %}"></script>
-</body>
-</html>
+    
+    </div>

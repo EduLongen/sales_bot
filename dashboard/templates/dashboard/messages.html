@@ -74,6 +74,12 @@
 
     <main class="main-content">
 
+      <!-- Header -->
+      <header class="header">
+        <h1>Mensagens</h1>
+        <p>Gerencie suas mensagens.</p>
+      </header>
+
       {% if messages %}
       <div class="messages-container">
         <ul class="messages">
@@ -83,12 +89,6 @@
         </ul>
       </div>
       {% endif %}
-
-      <!-- Header -->
-      <header class="header">
-        <h1>Mensagens</h1>
-        <p>Gerencie suas mensagens.</p>
-      </header>
 
       <!-- Search bar and messages table -->
       <section class="table-container">
@@ -102,28 +102,47 @@
             <thead>
               <tr>
                 <th>Descrição</th>
+                <th>Data de Criação</th>
                 <th>Ações</th>
               </tr>
             </thead>
             <tbody>
-              {% for message in messages %}
+              {% for message in mensagens2 %}
               <tr>
                 <td>{{ message.content }}</td>
+                <td>{{ message.created_at|date:"d/m/Y H:i" }}</td>
+                {% if request.user.is_superuser %}
                 <td>
-                  <button class="edit-btn">✏️</button>
-                  <form action="{% url 'delete_message' message.id %}" method="post" style="display: inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="delete-btn">🗑️</button>
-                  </form>
+                  <a href="{% url 'edit_message' message.id %}" class="edit-link">✏️</a>
+                  <button class="delete-btn" data-message-id="{{ message.id }}" 
+                    data-action-url="{% url 'delete_message' message.id %}">🗑️</button>
                 </td>
+                {% endif %}
               </tr>
               {% empty %}
-                <tr>
-                  <td colspan="2" class="no-messages">Não há mensagens disponíveis.</td>
-                </tr>
+              <tr>
+                <td colspan="3">Nenhuma mensagem encontrada.</td>
+              </tr>
               {% endfor %}
             </tbody>
           </table>
+
+        <!-- Modal Delete -->
+          <div class="modal-overlay" id="deleteModal" style="display: none;">
+            <div class="modal">
+              <div class="modal-header">Confirmação de Exclusão</div>
+              <div class="modal-content">
+                <p>Tem certeza de que deseja excluir este usuário?<br>Esta ação não pode ser desfeita.</p>
+              </div>
+              <div class="modal-footer">
+                <button class="cancel-btn">Cancelar</button>
+                <form id="deleteForm" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="confirm-btn">Confirmar</button>
+                </form>
+              </div>
+            </div>
+          </div> 
         
 
         <div class="pagination">
