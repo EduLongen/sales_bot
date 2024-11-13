@@ -36,6 +36,8 @@ urlpatterns = [
     path('users/<int:user_id>/edit/', views.edit_user, name='edit_user'),  # Edit user URL
     path('users/<int:user_id>/delete/', views.delete_user, name='delete_user'),  # Delete user URL
 
+    path('clients/<int:client_id>/delete/', views.delete_client, name='delete_client'), # Delete client URL
+
     # Authentication routes
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
