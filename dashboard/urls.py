@@ -5,15 +5,13 @@ from django.contrib.auth import views as auth_views
 
 # Setting up the API router for REST API views
 api_router = DefaultRouter()
-api_router.register(r'users', api_views.UserViewSet)
 api_router.register(r'clients', api_views.ClientViewSet)
 api_router.register(r'categories', api_views.CategoryViewSet)
 api_router.register(r'products', api_views.ProductViewSet)
 api_router.register(r'orders', api_views.OrderViewSet)
-api_router.register(r'order-items', api_views.OrderItemViewSet)
-api_router.register(r'messages', api_views.MessageViewSet)
-api_router.register(r'pix-payments', api_views.PixPaymentViewSet)
-api_router.register(r'jwts', api_views.JWTViewSet)
+#api_router.register(r'order-items', api_views.OrderItemViewSet)
+#api_router.register(r'messages', api_views.MessageViewSet)
+
 
 urlpatterns = [
     # Template-based views
@@ -48,4 +46,9 @@ urlpatterns = [
 
     # API routes
     path('api/', include(api_router.urls)),
+    path('api/products/category/<int:category_id>/', api_views.ProductByCategoryView.as_view(), name='product-by-category'),
+    path('api/products/<int:id>/', api_views.ProductDetailView.as_view(), name='product-detail'),
+    path('api/clients/', api_views.ClientCreateView.as_view(), name='client-create'),
+    path('api/orders/', views.create_order, name='create_order'),
+
 ]
