@@ -195,26 +195,23 @@ def delete_message(request, message_id):
 
 @login_required
 def pix_list_view(request):
-    # Busca todas as chaves Pix no banco de dados
-    pix_keys = PixPayment.objects.all()
+    pix_keys = PixPayment.objects.all() 
     return render(request, 'dashboard/payment.html', {'pix_keys': pix_keys})
+
 
 @login_required
 def pix_add_view(request):
     if request.method == 'POST':
         form = PixPaymentForm(request.POST)
-        if form.is_valid():  # Verifica se o formulário é válido
+        if form.is_valid():
             form.save()
             messages.success(request, 'Chave Pix adicionada com sucesso!')
-            return redirect('payment')  # Redireciona para a página de listagem
+            return redirect('payment')  # Redireciona para a lista de chaves Pix
         else:
-            messages.error(request, 'Erro ao adicionar a chave Pix. Verifique os dados.')
+            messages.error(request, 'Erro ao adicionar a chave Pix. Tente novamente.')
     else:
         form = PixPaymentForm()
-
-    # Lista as chaves Pix para mostrar no template
-    pix_keys = PixPayment.objects.all()
-
+    pix_keys = PixPayment.objects.all() 
     return render(request, 'dashboard/payment.html', {'form': form, 'pix_keys': pix_keys})
 
 @login_required
@@ -222,4 +219,5 @@ def delete_pix_key(request, pk):
     pix_key = get_object_or_404(PixPayment, pk=pk)
     if request.method == 'POST':
         pix_key.delete()
-    return redirect('pix_list')  # Redireciona para a lista após excluir
+        messages.success(request, 'Chave Pix deletada com sucesso!')
+    return redirect('payment') 

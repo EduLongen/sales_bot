@@ -27,7 +27,7 @@ urlpatterns = [
     path('clients/', views.clients_list, name='clients'),
     path('messages/', views.messages_list, name='messages'),
     path('orders/', views.orders_list, name='orders'),
-    path('payment/', views.pix_list_view, name='payment'),
+    path('payment/', views.pix_add_view, name='payment'),
     path('products/', views.products, name='products'),
     path('transmission/', views.transmission, name='transmission'),
     
@@ -37,7 +37,9 @@ urlpatterns = [
     path('users/<int:user_id>/delete/', views.delete_user, name='delete_user'),  # Delete user URL
     path('messages/edit/<int:message_id>/', views.edit_message, name='edit_message'),  # Edit message URL
     path('messages/delete/<int:message_id>/', views.delete_message, name='delete_message'), # Delete message URL
-    path('payment/', views.pix_add_view, name='payment'), # Add payment URL
+    path('payment/delete/<int:pk>/', views.delete_pix_key, name='delete_pix_key'),
+
+
 
 
     # Authentication routes

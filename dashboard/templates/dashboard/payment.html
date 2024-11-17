@@ -65,48 +65,54 @@
     <main class="main-content">
       <header class="header">
         <h1>Adicionar nova chave PIX</h1>
-      </header>
+      </header>    
 
-      <form class="payment-form" method="POST">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="pix_key">Chave Pix:</label>
-            {{ form.pix_key }} 
-        </div>
-        <div class="form-actions">
-            <button type="submit" class="submit-btn">Salvar Chave</button>
-        </div>
-    </form>
-    
-      <section class="pix-keys">
-        <h2>Chaves cadastradas</h2>
-        <table class="pix-table">
-          <thead>
+
+      {% if messages %}
+      <ul class="messages">
+          {% for message in messages %}
+              <li class="{{ message.tags }}">{{ message }}</li>
+          {% endfor %}
+      </ul>
+        {% endif %}
+  
+      <!-- Formulário de adição de chave Pix -->
+  <form method="POST" action="{% url 'payment' %}">
+    {% csrf_token %}
+        <label for="pix_key">Chave Pix:</label>
+        {{ form.pix_key }}  
+        <button type="submit" class="submit-btn">Salvar Chave</button>
+      </form>
+
+<!-- Lista de chaves Pix -->
+<section class="pix-keys">
+    <h2>Chaves cadastradas</h2>
+    <table class="pix-table">
+        <thead>
             <tr>
-              <th>Chave</th>
-              <th>Ações</th>
+                <th>Chave</th>
+                <th>Ações</th>
             </tr>
-          </thead>
-          <tbody>
-            {% for pix_key in pix_keys %}
-              <tr>
-                <td>{{ pix_key.pix_key }}</td>
-
-              </tr>
+        </thead>
+        <tbody>
+          {% for pix_key in pix_keys %}
+                <tr>
+                  <td>{{ pix_key.pix_key }}</td> 
+                  <td>
+                        <form method="POST" action="{% url 'delete_pix_key' pix_key.pk %}">
+                            {% csrf_token %}
+                            <button class="delete-btn" type="submit">🗑️</button>
+                        </form>
+                    </td>
+                </tr>
             {% empty %}
-              <tr>
-                <td colspan="3">Nenhuma chave Pix cadastrada.</td>
-              </tr>
+                <tr>
+                    <td colspan="2">Nenhuma chave Pix cadastrada.</td>
+                </tr>
             {% endfor %}
-          </tbody>
-        </table>
-        
-        <div class="pagination">
-          <button class="pagination-btn">Anterior</button>
-          <span class="page-indicator">Página 1 de 10</span>
-          <button class="pagination-btn">Próxima</button>
-        </div>
-      </section>
+        </tbody>
+    </table>
+</section>
     </main>
   </div>
 
@@ -119,6 +125,6 @@
     </div>
   </div>
 
-  <script src="{% static 'dashboard/js/payment.js' %}"></script>
+    <!--<script src="{% static 'dashboard/js/payment.js' %}"></script>-->
 </body>
 </html>

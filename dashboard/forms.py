@@ -63,15 +63,13 @@ class MessageForm(forms.ModelForm):
             'created_at': forms.TextInput(attrs={'readonly': 'readonly'}),  
         }
 
-
 class PixPaymentForm(forms.ModelForm):
     class Meta:
         model = PixPayment
-        fields = ['pix_key']  # Campos que podem ser adicionados
+        fields = ['pix_key']
         widgets = {
             'pix_key': forms.TextInput(attrs={
                 'placeholder': 'Digite a chave Pix',
                 'class': 'input-field',
-                'id': 'pix_key',
             }),
         }
