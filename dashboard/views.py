@@ -13,9 +13,7 @@ from .forms import MessageForm
 from .models import Message
 from .models import PixPayment
 from .forms import PixPaymentForm
-
-
-
+from .models import Client
 
 @login_required
 def dashboard(request):
@@ -43,7 +41,22 @@ def categories_list(request):
 
 @login_required
 def clients_list(request):
-    return render(request, 'dashboard/clients.html')
+    clients = Client.objects.all()
+    return render(request, 'dashboard/clients.html', {'clients': clients})
+
+@login_required
+def delete_client(request, client_id):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("You are not allowed to delete clients.")
+    
+    client_to_delete = get_object_or_404(Client, id=client_id)
+
+    if request.method == 'POST':
+        client_to_delete.delete()
+        messages.success(request, "Cliente deletado com sucesso.")
+        return redirect('clients')
+
+    return redirect('clients')
 
 @login_required
 def messages_list(request):
