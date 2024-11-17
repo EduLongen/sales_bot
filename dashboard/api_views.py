@@ -55,14 +55,32 @@ class ClientCreateView(generics.CreateAPIView):
     serializer_class = ClientSerializer
     
 
+# class ClientViewSet(viewsets.ModelViewSet):
+#     queryset = Client.objects.all()
+#     serializer_class = ClientSerializer
+
+#     @action(detail=True, methods=['get'], permission_classes=[AllowAny])
+#     def last_order(self, request, pk=None):
+#         client = get_object_or_404(Client, pk=pk)
+
+#         last_order = Order.objects.filter(client=client).order_by('-created_at').first()
+
+#         if last_order:
+#             order_serializer = OrderSerializer(last_order)
+#             return Response(order_serializer.data)
+#         else:
+#             return Response({'message': 'No orders found for this client'}, status=status.HTTP_404_NOT_FOUND)
+
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
 
-    @action(detail=True, methods=['get'], permission_classes=[AllowAny])
-    def last_order(self, request, pk=None):
-        client = get_object_or_404(Client, pk=pk)
+    @action(detail=False, methods=['get'], url_path='last-order/(?P<chat_id>[^/.]+)', permission_classes=[AllowAny])
+    def last_order(self, request, chat_id=None):
+        # Busca o cliente pelo chat_id
+        client = get_object_or_404(Client, chat_id=chat_id)
 
+        # Busca o último pedido do cliente
         last_order = Order.objects.filter(client=client).order_by('-created_at').first()
 
         if last_order:
@@ -70,7 +88,6 @@ class ClientViewSet(viewsets.ModelViewSet):
             return Response(order_serializer.data)
         else:
             return Response({'message': 'No orders found for this client'}, status=status.HTTP_404_NOT_FOUND)
-
 
 # class OrderCreateView(generics.CreateAPIView):
 #     queryset = Order.objects.all()
