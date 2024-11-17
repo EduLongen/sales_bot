@@ -50,12 +50,17 @@ class EditUserForm(forms.ModelForm):
         return username
 
 class CategoryForm(forms.ModelForm):
+    name = forms.CharField(
+        label="Nome",
+        widget=forms.TextInput()
+    )
+    is_active = forms.BooleanField(
+        required=False,
+        initial=True,
+        label="Ativo",
+        widget=forms.CheckboxInput(attrs={'style': 'display: inline-block; width: auto; margin-right: 10px; vertical-align: middle;'})
+    )
+
     class Meta:
         model = Category
-        fields = ['name']
-        widgets = {
-            'name': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Digite o nome da categoria'
-            }),
-        }
+        fields = ['name', 'is_active']

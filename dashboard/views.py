@@ -13,17 +13,54 @@ from .models import User, Category
 def dashboard(request):
     return render(request, 'dashboard/dashboard.html', {'user': request.user})
 
-@login_required
 def add_category(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, 'Categoria adicionada com sucesso!')
+            return redirect('categories')  
     else:
         form = CategoryForm()
-    
     return render(request, 'dashboard/add_category.html', {'form': form})
+
+@login_required
+def edit_category(request, id):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("You are not allowed to edit categories.")
+    
+    category = get_object_or_404(Category, pk=id)
+    
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            category = form.save(commit=False)
+            category.is_active = form.cleaned_data['is_active']
+            category.save()
+            messages.success(request, "Categoria atualizada com sucesso.")
+            return redirect('categories')
+    else:
+        form = CategoryForm(instance=category)
+    
+    return render(request, 'dashboard/categories.html', {'form': form, 'category': category})
+
+@login_required
+def delete_category(request, id):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("Você não tem permissão para excluir categorias.")
+    
+    category_to_delete = get_object_or_404(Category, id=id)
+    
+    try:
+        if request.method == 'POST':
+            category_name = category_to_delete.name
+            category_to_delete.delete()
+            messages.success(request, f"Categoria '{category_name}' foi excluída com sucesso.")
+            return redirect('categories')
+    except Exception as e:
+        messages.error(request, "Não foi possível excluir a categoria. Ela pode estar sendo usada em outros registros.")
+        
+    return redirect('categories')
 
 @login_required
 def add_message(request):
@@ -39,7 +76,7 @@ def add_user(request):
 
 @login_required
 def categories_list(request):
-    categories = Category.objects.all()  # Fetch all categories
+    categories = Category.objects.all()
     return render(request, 'dashboard/categories.html', {'categories': categories})
 
 @login_required
