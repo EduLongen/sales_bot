@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django import forms
-from .models import User, Message
+from .models import User, Message, PixPayment
 
 User = get_user_model()
 
@@ -61,4 +61,17 @@ class MessageForm(forms.ModelForm):
                 'placeholder': 'Digite sua mensagem aqui...',
             }),
             'created_at': forms.TextInput(attrs={'readonly': 'readonly'}),  
+        }
+
+
+class PixPaymentForm(forms.ModelForm):
+    class Meta:
+        model = PixPayment
+        fields = ['pix_key']  # Campos que podem ser adicionados
+        widgets = {
+            'pix_key': forms.TextInput(attrs={
+                'placeholder': 'Digite a chave Pix',
+                'class': 'input-field',
+                'id': 'pix_key',
+            }),
         }

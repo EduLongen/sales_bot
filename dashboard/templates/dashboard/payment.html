@@ -59,14 +59,6 @@
             <span>💳</span> Pagamento
           </a>
         </li>
-        <li class="menu-item">
-          <form action="{% url 'logout' %}" method="post" style="display: inline;">
-              {% csrf_token %}
-              <button type="submit" class="menu-link logout-button">
-                  <span>⬅️</span> Logout
-              </button>
-          </form>
-        </li>
       </ul>
     </aside>
 
@@ -78,15 +70,14 @@
       <form class="payment-form" method="POST">
         {% csrf_token %}
         <div class="form-group">
-          <label for="chave">Chave:</label>
-          <input type="text" id="chave" name="chave" placeholder="..." class="input-field">
+            <label for="pix_key">Chave Pix:</label>
+            {{ form.pix_key }} 
         </div>
-
         <div class="form-actions">
-          <button type="submit" class="submit-btn">Salvar chave</button>
+            <button type="submit" class="submit-btn">Salvar Chave</button>
         </div>
-      </form>
-
+    </form>
+    
       <section class="pix-keys">
         <h2>Chaves cadastradas</h2>
         <table class="pix-table">
@@ -97,15 +88,16 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>000.000.000-00</td>
-              <td><button class="delete-btn">🗑️</button></td>
-            </tr>
-            <tr>
-              <td>00.000000/0000-00</td>
-              <td><button class="delete-btn">🗑️</button></td>
-            </tr>
-            <!-- Add more rows as needed -->
+            {% for pix_key in pix_keys %}
+              <tr>
+                <td>{{ pix_key.pix_key }}</td>
+
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="3">Nenhuma chave Pix cadastrada.</td>
+              </tr>
+            {% endfor %}
           </tbody>
         </table>
         
