@@ -358,12 +358,12 @@ button {
   transition: background-color 0.3s ease;
 }
 
-.edit-btn, .delete-btn {
+.edit-btn{
   background-color: var(--gray-0);
   color: var(--gray-900);
 }
 
-.edit-btn:hover, .delete-btn:hover {
+.edit-btn:hover{
   background-color: var(--gray-100);
 }
 
@@ -546,18 +546,6 @@ button {
   background-color: #45a049;
 }
 
-.delete-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.2em;
-  margin-left: 10px;
-}
-
-.delete-btn:hover {
-  opacity: 0.7;
-}
-
 .modal-buttons {
   display: flex;
   justify-content: flex-end;
@@ -569,14 +557,6 @@ button {
   background-color: #6c757d;
 }
 
-.modal-btn.delete {
-  background-color: #dc3545;
-}
-
 .modal-btn.cancel:hover {
   background-color: #5a6268;
-}
-
-.modal-btn.delete:hover {
-  background-color: #c82333;
 }

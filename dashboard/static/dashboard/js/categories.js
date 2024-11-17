@@ -7,12 +7,7 @@ const editCategoryId = document.getElementById("editCategoryId");
 const editCategoryName = document.getElementById("editCategoryName");
 const editCategoryStatus = document.getElementById("editCategoryStatus");
 
-const deleteCategoryModal = document.getElementById("deleteCategoryModal");
-const closeDeleteCategoryModal = document.getElementById(
-  "closeDeleteCategoryModal"
-);
-const deleteCategoryForm = document.getElementById("deleteCategoryForm");
-const deleteCategoryId = document.getElementById("deleteCategoryId");
+
 
 function hideEditCategoryModal() {
   editCategoryModal.style.display = "none";
@@ -54,36 +49,10 @@ window.addEventListener("click", function (event) {
   }
 });
 
-function hideDeleteCategoryModal() {
-  deleteCategoryModal.style.display = "none";
-}
 
-function showDeleteCategoryModal(categoryId) {
-  deleteCategoryId.value = categoryId;
-  deleteCategoryForm.action = `/dashboard/dashboard/categories/delete/${categoryId}/`;
-  deleteCategoryModal.style.display = "flex";
-}
-
-// Adicione os event listeners para os botões de delete
-document.querySelectorAll(".delete-btn").forEach((button) => {
-  button.addEventListener("click", function (event) {
-    const categoryRow = event.target.closest("tr");
-    const categoryId = categoryRow.getAttribute("data-id");
-    showDeleteCategoryModal(categoryId);
-  });
-});
-
-closeDeleteCategoryModal.addEventListener("click", hideDeleteCategoryModal);
-
-deleteCategoryForm.addEventListener("submit", function (event) {
-  hideDeleteCategoryModal();
-});
 
 window.addEventListener("click", function (event) {
   if (event.target === editCategoryModal) {
     hideEditCategoryModal();
-  }
-  if (event.target === deleteCategoryModal) {
-    hideDeleteCategoryModal();
   }
 });

@@ -45,24 +45,6 @@ def edit_category(request, id):
     return render(request, 'dashboard/categories.html', {'form': form, 'category': category})
 
 @login_required
-def delete_category(request, id):
-    if not request.user.is_superuser:
-        return HttpResponseForbidden("Você não tem permissão para excluir categorias.")
-    
-    category_to_delete = get_object_or_404(Category, id=id)
-    
-    try:
-        if request.method == 'POST':
-            category_name = category_to_delete.name
-            category_to_delete.delete()
-            messages.success(request, f"Categoria '{category_name}' foi excluída com sucesso.")
-            return redirect('categories')
-    except Exception as e:
-        messages.error(request, "Não foi possível excluir a categoria. Ela pode estar sendo usada em outros registros.")
-        
-    return redirect('categories')
-
-@login_required
 def add_message(request):
     return render(request, 'dashboard/add_message.html')
 

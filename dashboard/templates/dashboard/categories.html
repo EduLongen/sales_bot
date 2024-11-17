@@ -112,7 +112,6 @@
                 <td>{% if category.is_active %}Sim{% else %}Não{% endif %}</td>
                 <td>
                   <button class="edit-btn">✏️</button>
-                  <button class="delete-btn">🗑️</button>
                 </td>
               </tr>
               {% endfor %}
@@ -147,28 +146,6 @@
             <option value="False">Não</option>
           </select>
           <button type="submit" class="modal-btn">Salvar</button>
-        </form>
-      </div>
-    </div>
-
-    <div id="deleteCategoryModal" class="modal">
-      <div class="modal-content">
-        <span id="closeDeleteCategoryModal" class="close">&times;</span>
-        <h2>Excluir Categoria</h2>
-        <p>Tem certeza que deseja excluir esta categoria?</p>
-        <form id="deleteCategoryForm" method="post">
-          {% csrf_token %}
-          <input type="hidden" name="id" id="deleteCategoryId" />
-          <div class="modal-buttons">
-            <button
-              type="button"
-              class="modal-btn cancel"
-              onclick="hideDeleteCategoryModal()"
-            >
-              Cancelar
-            </button>
-            <button type="submit" class="modal-btn delete">Excluir</button>
-          </div>
         </form>
       </div>
     </div>

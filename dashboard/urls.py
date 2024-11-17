@@ -25,7 +25,6 @@ urlpatterns = [
     path('add_user/', views.add_user, name='add_user'),
     path('categories/', views.categories_list, name='categories'),
     path('dashboard/categories/edit/<int:id>/', views.edit_category, name='edit_category'),
-    path('dashboard/categories/delete/<int:id>/', views.delete_category, name='delete_category'),
     path('clients/', views.clients_list, name='clients'),
     path('messages/', views.messages_list, name='messages'),
     path('orders/', views.orders_list, name='orders'),
