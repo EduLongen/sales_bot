@@ -59,6 +59,14 @@
             <span>💳</span> Pagamento
           </a>
         </li>
+        <form action="{% url 'logout' %}" method="post" style="display: inline;">
+          {% csrf_token %}
+          <button type="submit" class="menu-link logout-button">
+              <span>⬅️</span> Logout
+          </button>
+      </form>
+    </li>
+  </ul>
       </ul>
     </aside>
 
