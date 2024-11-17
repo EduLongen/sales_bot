@@ -20,7 +20,7 @@ class BlockAllAccess(permissions.BasePermission):
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     @action(detail=False, methods=['get'], permission_classes=[AllowAny])
     def all_categories(self, request):
@@ -53,6 +53,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 class ClientCreateView(generics.CreateAPIView):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
+    permission_classes = [AllowAny]
     
 
 # class ClientViewSet(viewsets.ModelViewSet):
