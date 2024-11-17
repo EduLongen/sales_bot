@@ -6,7 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import filters
 from .models import Product, Category, Client, Order
-from .serializers import OrderSerializer, ProductSerializer, CategorySerializer, ClientSerializer
+from .serializers import  OrderSerializer, ProductSerializer, CategorySerializer, ClientSerializer
 from rest_framework import generics
 from .models import Product
 from .serializers import ProductSerializer
@@ -20,7 +20,7 @@ class BlockAllAccess(permissions.BasePermission):
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [BlockAllAccess]
+    permission_classes = [IsAuthenticated]
 
     @action(detail=False, methods=['get'], permission_classes=[AllowAny])
     def all_categories(self, request):
@@ -45,6 +45,7 @@ class ProductDetailView(generics.RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'id'
+
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -71,19 +72,24 @@ class ClientViewSet(viewsets.ModelViewSet):
             return Response({'message': 'No orders found for this client'}, status=status.HTTP_404_NOT_FOUND)
 
 
-class OrderViewSet(viewsets.ModelViewSet):
+# class OrderCreateView(generics.CreateAPIView):
+#     queryset = Order.objects.all()
+#     serializer_class = OrderSerializer
+#     permission_classes = [IsAuthenticated]
+
+#     def create(self, request, *args, **kwargs):
+#         # A view CreateAPIView já lida com a criação do pedido, mas podemos adicionar lógica personalizada aqui, se necessário.
+#         return super().create(request, *args, **kwargs)
+    
+class OrderCreateView(generics.CreateAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
 
+    def perform_create(self, serializer):
+        chat_id = self.request.data.get('client_chat_id')
+        client = Client.objects.get(chat_id=chat_id)  # Encontra o cliente pelo chat_id
+        order = serializer.save(client=client)  # Cria o pedido
 
-@api_view(['POST'])
-def create_order(request):
-    if request.method == 'POST':
-        # O serializer vai processar os dados do pedido e seus itens
-        serializer = OrderSerializer(data=request.data)
-
-        if serializer.is_valid():
-            # Salva o pedido e os itens associados
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # Já no serializer de Order, os OrderItems serão criados automaticamente
+        return order

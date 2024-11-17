@@ -38,38 +38,50 @@ class PixPaymentSerializer(serializers.ModelSerializer):
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
-    product = ProductSerializer()  # Detalhes do produto
+    product = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all())
 
     class Meta:
         model = OrderItem
-        fields = ['id', 'order', 'product', 'quantity', 'price']
+        fields = ['product', 'quantity']
 
+    
 class OrderSerializer(serializers.ModelSerializer):
-    client = ClientSerializer()  # Detalhes do cliente
-    items = OrderItemSerializer(many=True)  # Lista de itens do pedido
+    client_chat_id = serializers.IntegerField(write_only=True)
+    items = OrderItemSerializer(many=True, write_only=True)
 
     class Meta:
         model = Order
-        fields = ['id', 'client', 'status', 'total', 'created_at', 'updated_at', 'items']
+        fields = ['id', 'client_chat_id', 'status', 'total', 'created_at', 'updated_at', 'items']  # Inclua client_chat_id aqui
 
-    # Sobrescrevendo o método para salvar os itens do pedido
     def create(self, validated_data):
-        items_data = validated_data.pop('items')  # Remove items
+        items_data = validated_data.pop('items')
+        chat_id = validated_data.pop('client_chat_id')
+
+        # Busca o cliente pelo chat_id
+        client = Client.objects.get(chat_id=chat_id)
+        validated_data['client'] = client
+
+        # Cria o pedido
         order = Order.objects.create(**validated_data)
+
+        # Calcula o total e cria os itens
+        total = 0
         for item_data in items_data:
-            OrderItem.objects.create(order=order, **item_data)
+            product = item_data['product']
+            quantity = item_data['quantity']
+            price = product.price * quantity  # Calcula o preço total do item
+
+            total += price
+            OrderItem.objects.create(
+                order=order,
+                product=product,
+                quantity=quantity,
+                price=price
+            )
+
+        # Atualiza o total no pedido
+        order.total = total
+        order.save()
+
         return order
 
-    # Sobrescrevendo o método para atualizar os itens do pedido
-    def update(self, instance, validated_data):
-        items_data = validated_data.pop('items', None)
-        instance = super().update(instance, validated_data)
-
-        if items_data:
-            # Remove itens antigos
-            instance.items.all().delete()
-            # Cria os novos itens
-            for item_data in items_data:
-                OrderItem.objects.create(order=instance, **item_data)
-
-        return instance
