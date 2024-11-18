@@ -29,7 +29,7 @@ urlpatterns = [
     path('messages/', views.messages_list, name='messages'),
     path('orders/', views.orders_list, name='orders'),
     path('payment/', views.payment_page, name='payment'),
-    path('products/', views.products, name='products'),
+    path('products/', views.list_products, name='products'),
     path('transmission/', views.transmission, name='transmission'),
     
     path('users/', views.users_list, name='users'),

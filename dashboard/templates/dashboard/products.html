@@ -1,20 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Produtos</title>
-  {% load static %}  <!-- Load static files -->
+  {% load static %}
   <link rel="stylesheet" href="{% static 'dashboard/css/products.css' %}">
 </head>
-
 <body>
   <div class="dashboard-container">
     <aside class="sidebar">
-      <div class="logo">
-        <h2>Dashboard</h2>
-      </div>
       <ul class="menu">
         <li class="menu-item">
           <a href="{% url 'dashboard' %}" class="menu-link">
@@ -78,10 +73,8 @@
         <p>Gerencie e organize seus produtos.</p>
       </header>
 
-      <!-- Search bar with add button -->
       <section class="table-container">
         <div class="search-container">
-          <input type="text" class="search-bar" placeholder="🔍 Buscar produto">
           <a href="{% url 'add_product' %}" class="add-product-btn">Adicionar Produto</a>
         </div>
 
@@ -96,37 +89,17 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>CheeseBurguer sem queijo</td>
-              <td>Food</td>
-              <td>R$ 2,00</td>
-              <td>Ativo</td>
-              <td>
-                <button class="edit-btn">✏️</button>
-                <button class="delete-btn">🗑️</button>
-              </td>
-            </tr>
-            <tr>
-              <td>Batata palha</td>
-              <td>Topping</td>
-              <td>R$ 2,00</td>
-              <td>Ativo</td>
-              <td>
-                <button class="edit-btn">✏️</button>
-                <button class="delete-btn">🗑️</button>
-              </td>
-            </tr>
-            <tr>
-              <td>Pizza de Abacaxi</td>
-              <td>Food</td>
-              <td>R$ 2,00</td>
-              <td>Ativo</td>
-              <td>
-                <button class="edit-btn">✏️</button>
-                <button class="delete-btn">🗑️</button>
-              </td>
-            </tr>
-            <!-- Add more rows as needed -->
+            {% for product in products %}
+              <tr>
+                <td>{{ product.name }}</td>
+                <td>{{ product.category }}</td>
+                <td>{{ product.price }}</td>
+                <td>{{ product.is_active|yesno:"Sim,Não" }}</td>
+                <td>
+                  <!-- Ações como editar e deletar podem ser adicionadas aqui -->
+                </td>
+              </tr>
+            {% endfor %}
           </tbody>
         </table>
 
@@ -139,5 +112,5 @@
     </main>
   </div>
 </body>
-
 </html>
+

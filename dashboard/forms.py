@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django import forms
-from .models import User, Category
+from .models import User, Category, Product
 
 User = get_user_model()
 
@@ -64,3 +64,12 @@ class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
         fields = ['name', 'is_active']
+
+
+    
+
+    
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = [ 'image_url', 'name', 'description', 'category','price']

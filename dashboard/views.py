@@ -6,8 +6,8 @@ from django.http import HttpResponseForbidden
 from django.http import HttpResponse
 from django.contrib import messages
 from django.shortcuts import redirect
-from .forms import RegisterForm, EditUserForm, CategoryForm  
-from .models import User, Category, Client
+from .forms import RegisterForm, EditUserForm, CategoryForm, ProductForm  
+from .models import User, Category, Client, Product
 
 @login_required
 def dashboard(request):
@@ -50,7 +50,14 @@ def add_message(request):
 
 @login_required
 def add_product(request):
-    return render(request, 'dashboard/add_product.html')
+    if request.method == 'POST':
+        form = ProductForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('products')
+    else:
+        form = ProductForm()
+    return render(request, 'dashboard/add_product.html', {'form': form})
 
 @login_required
 def add_user(request):
@@ -93,8 +100,9 @@ def payment_page(request):
     return render(request, 'dashboard/payment.html')
 
 @login_required
-def products(request):
-    return render(request, 'dashboard/products.html')
+def list_products(request):
+    products = Product.objects.all()
+    return render(request, 'dashboard/products.html', {'products': products})
 
 @login_required
 def transmission(request):
