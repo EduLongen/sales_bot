@@ -6,18 +6,43 @@ from django.http import HttpResponseForbidden
 from django.http import HttpResponse
 from django.contrib import messages
 from django.shortcuts import redirect
-from .forms import RegisterForm
-from .forms import EditUserForm
-from .models import User
-from .models import Client
+from .forms import RegisterForm, EditUserForm, CategoryForm  
+from .models import User, Category, Client
 
 @login_required
 def dashboard(request):
     return render(request, 'dashboard/dashboard.html', {'user': request.user})
 
-@login_required
 def add_category(request):
-    return render(request, 'dashboard/add_category.html')
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Categoria adicionada com sucesso!')
+            return redirect('categories')  
+    else:
+        form = CategoryForm()
+    return render(request, 'dashboard/add_category.html', {'form': form})
+
+@login_required
+def edit_category(request, id):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("You are not allowed to edit categories.")
+    
+    category = get_object_or_404(Category, pk=id)
+    
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            category = form.save(commit=False)
+            category.is_active = form.cleaned_data['is_active']
+            category.save()
+            messages.success(request, "Categoria atualizada com sucesso.")
+            return redirect('categories')
+    else:
+        form = CategoryForm(instance=category)
+    
+    return render(request, 'dashboard/categories.html', {'form': form, 'category': category})
 
 @login_required
 def add_message(request):
@@ -33,7 +58,8 @@ def add_user(request):
 
 @login_required
 def categories_list(request):
-    return render(request, 'dashboard/categories.html')
+    categories = Category.objects.all()
+    return render(request, 'dashboard/categories.html', {'categories': categories})
 
 @login_required
 def clients_list(request):

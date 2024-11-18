@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django import forms
-from .models import User
+from .models import User, Category
 
 User = get_user_model()
 
@@ -48,3 +48,19 @@ class EditUserForm(forms.ModelForm):
         if User.objects.filter(username=username).exclude(pk=self.instance.pk).exists():
             raise forms.ValidationError("A user with that username already exists.")
         return username
+
+class CategoryForm(forms.ModelForm):
+    name = forms.CharField(
+        label="Nome",
+        widget=forms.TextInput()
+    )
+    is_active = forms.BooleanField(
+        required=False,
+        initial=True,
+        label="Ativo",
+        widget=forms.CheckboxInput(attrs={'style': 'display: inline-block; width: auto; margin-right: 10px; vertical-align: middle;'})
+    )
+
+    class Meta:
+        model = Category
+        fields = ['name', 'is_active']
