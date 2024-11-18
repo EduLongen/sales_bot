@@ -145,3 +145,25 @@ def delete_user(request, user_id):
         return redirect('users')
 
     return redirect('users')
+
+@login_required
+def transmission(request):
+    if request.method == 'POST':
+        message = request.POST.get('message')
+    return render(request, 'dashboard/transmission.html')
+
+
+
+@login_required
+def send_telegram_message(message):
+    bot_token = '7503537602:AAEYJn9c0ePpu_hQiVxXnMeMF260-kYVbxs'
+    url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+    
+    for chat_id in chat_ids:
+        data = {
+            'chat_id': chat_id,
+            'text': message
+        }
+        response = requests.post(url, data=data)
+        if not response.ok:
+            print(f"Erro ao enviar para o chat {chat_id}")

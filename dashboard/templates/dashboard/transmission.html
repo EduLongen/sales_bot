@@ -75,14 +75,13 @@
 		<main class="main-content">
 			<header class="header">
 				<h1>Transmissão</h1>
-				<p>Envie uma mensagem para os seus clients.</p>
+				<p>Envie uma mensagem para os seus clientes.</p>
 			</header>
 
 			<form method="POST" action="{% url 'transmission' %}">
 				{% csrf_token %}
 				<section class="transmission-container">
-					<textarea class="transmission-message" name="message" placeholder="Escreva sua mensagem..."
-						required></textarea>
+					<textarea class="transmission-message" name="message" placeholder="Escreva sua mensagem..." required></textarea>
 					<p class="alert-text">Atenção! Esta transmissão será enviada a todos os clientes da sua loja!</p>
 					<button type="submit" class="send-btn">Enviar</button>
 				</section>
