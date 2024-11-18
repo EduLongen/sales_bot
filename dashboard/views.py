@@ -6,22 +6,43 @@ from django.http import HttpResponseForbidden
 from django.http import HttpResponse
 from django.contrib import messages
 from django.shortcuts import redirect
-from .forms import RegisterForm
-from .forms import EditUserForm
-from .models import User
-from .forms import MessageForm
-from .models import Message
-from .models import PixPayment
-from .forms import PixPaymentForm
-from .models import Client
+from .forms import RegisterForm, EditUserForm, CategoryForm, MessageForm, PixPaymentForm  
+from .models import User, Category, Client, Message, PixPayment
 
 @login_required
 def dashboard(request):
     return render(request, 'dashboard/dashboard.html', {'user': request.user})
 
-@login_required
 def add_category(request):
-    return render(request, 'dashboard/add_category.html')
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Categoria adicionada com sucesso!')
+            return redirect('categories')  
+    else:
+        form = CategoryForm()
+    return render(request, 'dashboard/add_category.html', {'form': form})
+
+@login_required
+def edit_category(request, id):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("You are not allowed to edit categories.")
+    
+    category = get_object_or_404(Category, pk=id)
+    
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            category = form.save(commit=False)
+            category.is_active = form.cleaned_data['is_active']
+            category.save()
+            messages.success(request, "Categoria atualizada com sucesso.")
+            return redirect('categories')
+    else:
+        form = CategoryForm(instance=category)
+    
+    return render(request, 'dashboard/categories.html', {'form': form, 'category': category})
 
 @login_required
 def add_message(request):
@@ -37,7 +58,8 @@ def add_user(request):
 
 @login_required
 def categories_list(request):
-    return render(request, 'dashboard/categories.html')
+    categories = Category.objects.all()
+    return render(request, 'dashboard/categories.html', {'categories': categories})
 
 @login_required
 def clients_list(request):
@@ -68,7 +90,41 @@ def orders_list(request):
 
 @login_required
 def payment_page(request):
-    return render(request, 'dashboard/payment.html')
+    if request.method == 'POST':
+        pix_key = request.POST.get('chave')
+        description = request.POST.get('description', '')
+
+        if not pix_key:
+            messages.error(request, 'Chave PIX é obrigatória.')
+            return redirect('payment')
+
+        # Create a new PixPayment object
+        pix_payment = PixPayment.objects.create(
+            pix_key=pix_key,
+            description=description
+        )
+
+        # Generate QR code
+        pix_payment.generate_qr_code()
+
+        messages.success(request, 'Chave PIX salva e QR Code gerado com sucesso.')
+        return redirect('payment')
+
+    # Fetch existing PIX payments for display
+    pix_payments = PixPayment.objects.all()
+    return render(request, 'dashboard/payment.html', {'pix_payments': pix_payments})
+
+def delete_pix_payment(request, pix_id):
+    # Ensure it's a POST request or proper confirmation
+    if request.method == "POST":
+        pix_payment = get_object_or_404(PixPayment, id=pix_id)
+        pix_payment.delete()
+        messages.success(request, "Chave PIX excluída com sucesso!")
+        return redirect('payment')  # Redirect to payment list page
+    else:
+        # Return a response or raise a 405 Method Not Allowed
+        messages.error(request, "Operação inválida.")
+        return redirect('payment')
 
 @login_required
 def products(request):

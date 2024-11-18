@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django import forms
-from .models import User, Message, PixPayment
+from .models import User, Category, Message, PixPayment
 
 User = get_user_model()
 
@@ -49,6 +49,21 @@ class EditUserForm(forms.ModelForm):
             raise forms.ValidationError("A user with that username already exists.")
         return username
 
+class CategoryForm(forms.ModelForm):
+    name = forms.CharField(
+        label="Nome",
+        widget=forms.TextInput()
+    )
+    is_active = forms.BooleanField(
+        required=False,
+        initial=True,
+        label="Ativo",
+        widget=forms.CheckboxInput(attrs={'style': 'display: inline-block; width: auto; margin-right: 10px; vertical-align: middle;'})
+    )
+
+    class Meta:
+        model = Category
+        fields = ['name', 'is_active']
 
 class MessageForm(forms.ModelForm):
     class Meta:
@@ -62,14 +77,8 @@ class MessageForm(forms.ModelForm):
             }),
             'created_at': forms.TextInput(attrs={'readonly': 'readonly'}),  
         }
-
+        
 class PixPaymentForm(forms.ModelForm):
     class Meta:
         model = PixPayment
-        fields = ['pix_key']
-        widgets = {
-            'pix_key': forms.TextInput(attrs={
-                'placeholder': 'Digite a chave Pix',
-                'class': 'input-field',
-            }),
-        }
+        fields = ['pix_key', 'description']

@@ -358,12 +358,12 @@ button {
   transition: background-color 0.3s ease;
 }
 
-.edit-btn, .delete-btn {
+.edit-btn{
   background-color: var(--gray-0);
   color: var(--gray-900);
 }
 
-.edit-btn:hover, .delete-btn:hover {
+.edit-btn:hover{
   background-color: var(--gray-100);
 }
 
@@ -436,4 +436,127 @@ button {
 .menu-item.active .logout-button {
   background-color: var(--gray-600);
   color: var(--gray-25);
+}
+
+/* Styling for the messages container */
+.messages-container {
+  position: absolute;
+  top: 20px; /* Ensures it's near the top of the page */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 400px; /* Matches form width */
+  text-align: center;
+  z-index: 1000; /* Ensures it's on top of other elements */
+}
+
+.messages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.messages li {
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  font-size: 16px;
+  color: var(--success-700);
+  border: 1px solid var(--success-400);
+  width: 100%;
+}
+
+/* Specific styles based on message types */
+.messages li.success {
+  background-color: var(--success-100);
+  color: var(--success-700);
+  border: 1px solid var(--success-400);
+}
+
+.messages li.error {
+  background-color: var(--error-100);
+  color: var(--error-700);
+  border: 1px solid var(--error-400);
+}
+
+.messages li.info {
+  background-color: var(--blue-100);
+  color: var(--blue-700);
+  border: 1px solid var(--blue-400);
+}
+
+.messages li.warning {
+  background-color: var(--warning-100);
+  color: var(--warning-700);
+  border: 1px solid var(--warning-400);
+}
+
+@media (max-width: 768px) {
+  .messages-container {
+    max-width: 90%;
+  }
+}
+
+
+/* Modal de edição */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-btn {
+  background-color: #4CAF50; /* Green */
+  color: white;
+  padding: 15px 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-btn:hover {
+  background-color: #45a049;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal-btn.cancel {
+  background-color: #6c757d;
+}
+
+.modal-btn.cancel:hover {
+  background-color: #5a6268;
 }

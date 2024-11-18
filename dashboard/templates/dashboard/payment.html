@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
   {% load static %}
   <link rel="stylesheet" href="{% static 'dashboard/css/payment.css' %}">
 </head>
+
 <body>
   <div class="dashboard-container">
     <aside class="sidebar">
@@ -59,14 +61,14 @@
             <span>💳</span> Pagamento
           </a>
         </li>
-        <form action="{% url 'logout' %}" method="post" style="display: inline;">
-          {% csrf_token %}
-          <button type="submit" class="menu-link logout-button">
+        <li class="menu-item">
+          <form action="{% url 'logout' %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="menu-link logout-button">
               <span>⬅️</span> Logout
-          </button>
-      </form>
-    </li>
-  </ul>
+            </button>
+          </form>
+        </li>
       </ul>
     </aside>
 
@@ -75,21 +77,29 @@
         <h1>Adicionar nova chave PIX</h1>
       </header>    
 
-
       {% if messages %}
-      <ul class="messages">
+      <div class="messages-container">
+        <ul class="messages">
           {% for message in messages %}
-              <li class="{{ message.tags }}">{{ message }}</li>
+          <li class="{{ message.tags }}">{{ message }}</li>
           {% endfor %}
-      </ul>
-        {% endif %}
-  
-      <!-- Formulário de adição de chave Pix -->
-  <form method="POST" action="{% url 'payment' %}">
-    {% csrf_token %}
-        <label for="pix_key">Chave Pix:</label>
-        {{ form.pix_key }}  
-        <button type="submit" class="submit-btn">Salvar Chave</button>
+        </ul>
+      </div>
+      {% endif %}
+
+      <form class="payment-form" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="chave">Chave:</label>
+          <input type="text" id="chave" name="chave" placeholder="..." class="input-field" required>
+        </div>
+        <div class="form-group">
+          <label for="description">Descrição:</label>
+          <input type="text" id="description" name="description" placeholder="Descrição opcional" class="input-field">
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="submit-btn">Salvar chave e gerar QR Code</button>
+        </div>
       </form>
 
 <!-- Lista de chaves Pix -->
@@ -98,41 +108,61 @@
     <table class="pix-table">
         <thead>
             <tr>
-                <th>Chave</th>
-                <th>Ações</th>
+              <th>Chave</th>
+              <th>Descrição</th>
+              <th>QR Code</th>
+              <th>Ações</th>
             </tr>
-        </thead>
-        <tbody>
-          {% for pix_key in pix_keys %}
-                <tr>
-                  <td>{{ pix_key.pix_key }}</td> 
-                  <td>
-                        <form method="POST" action="{% url 'delete_pix_key' pix_key.pk %}">
-                            {% csrf_token %}
-                            <button class="delete-btn" type="submit">🗑️</button>
-                        </form>
-                    </td>
-                </tr>
+          </thead>
+          <tbody>
+            {% for pix in pix_payments %}
+            <tr>
+              <td>{{ pix.pix_key }}</td>
+              <td>{{ pix.description }}</td>
+              <td>
+                {% if pix.qr_code_image %}
+                <img src="{{ pix.qr_code_image.url }}" alt="QR Code" class="qr-thumbnail">
+                {% else %}
+                <span>N/A</span>
+                {% endif %}
+              </td>
+              <td>
+                <form method="POST" action="{% url 'delete_pix_payment' pix.id %}">
+                  {% csrf_token %}
+                  <button type="button" class="delete-btn" data-delete-url="{% url 'delete_pix_payment' pix.id %}">🗑️</button>
+                </form>
+              </td>
+            </tr>
             {% empty %}
-                <tr>
-                    <td colspan="2">Nenhuma chave Pix cadastrada.</td>
-                </tr>
+            <tr>
+              <td colspan="4">Nenhuma chave PIX cadastrada.</td>
+            </tr>
             {% endfor %}
-        </tbody>
-    </table>
-</section>
+          </tbody>
+        </table>
+      </section>
     </main>
   </div>
 
-  <!-- Modal Structure -->
-  <div id="paymentModal" class="modal">
-    <div class="modal-content">
-      <h2>Chave PIX adicionada!</h2>
-      <p>A sua nova chave PIX foi adicionada com sucesso.</p>
-      <button id="closePaymentModal" class="modal-btn">OK</button>
+  <!-- Modal Overlay -->
+  <div id="deleteModal" class="modal-overlay" style="display: none;">
+    <!-- Modal Content -->
+    <div class="modal">
+      <div class="modal-header">
+        Confirmação de Exclusão
+      </div>
+      <div class="modal-content">
+        Tem certeza de que deseja excluir este item?
+      </div>
+      <div class="modal-footer">
+        <button id="cancelDelete" class="cancel-btn">Cancelar</button>
+        <button id="confirmDelete" class="confirm-btn">Sim, excluir</button>
+      </div>
     </div>
   </div>
 
-    <!--<script src="{% static 'dashboard/js/payment.js' %}"></script>-->
+  <script src="{% static 'dashboard/js/payment.js' %}"></script>
+
 </body>
+
 </html>
