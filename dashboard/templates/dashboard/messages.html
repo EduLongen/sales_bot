@@ -115,13 +115,13 @@
                 <td>{{ message.description }}</td>
                 {% if request.user.is_superuser %}
                 <td>
-                  <a href="{% url 'edit_message' message.id %}" class="edit-link" >✏️</a>
-                  <form action="{% url 'delete_message' message.id %}" method="post" style="display:inline;">
+                  <a href="{% url 'edit_message' message.id %}" class="edit-link">✏️</a>
+                  <form action="{% url 'delete_message' message.id %}" method="post" id="deleteFormTrigger" style="display:inline;">
                     {% csrf_token %}
-                    <button type="submit" class="delete-btn" onclick="return confirm('Tem certeza que deseja excluir esta mensagem?');">
-                        🗑️
+                    <button type="button" class="delete-btn" onclick="openModal()">
+                      🗑️
                     </button>
-                </form>
+                  </form>
                 </td>
                 {% endif %}
               </tr>
@@ -134,7 +134,22 @@
           </table>
 
         <!-- Modal Delete -->
-
+        <div class="modal-overlay" id="deleteModal" style="display: none;">
+          <div class="modal">
+            <div class="modal-header">Confirmação de Exclusão</div>
+            <div class="modal-content">
+              <p>Tem certeza de que deseja excluir esta mensagem?<br>Esta ação não pode ser desfeita.</p>
+            </div>
+              <div class="modal-footer">
+              <button class="cancel-btn" onclick="closeModal()">Cancelar</button>
+              <form id="deleteForm" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="confirm-btn">Confirmar</button>
+              </form>
+            </div>
+          </div>
+        </div>
+ 
         <div class="pagination">
           <button class="pagination-btn">Anterior</button>
           <span class="page-indicator">Página 1 de 10</span>
@@ -144,5 +159,8 @@
     </main>
   </div>
 </body>
+
+
+<script src="{% static 'dashboard/js/messages.js' %}"></script>
 
 </html>
