@@ -1,4 +1,6 @@
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
 from . import views, api_views  # Assuming you have api_views for API endpoints
 from django.contrib.auth import views as auth_views
@@ -28,7 +30,10 @@ urlpatterns = [
     path('clients/', views.clients_list, name='clients'),
     path('messages/', views.messages_list, name='messages'),
     path('orders/', views.orders_list, name='orders'),
+
     path('payment/', views.payment_page, name='payment'),
+    path('payment/<int:pix_id>/delete/', views.delete_pix_payment, name='delete_pix_payment'),
+
     path('products/', views.products, name='products'),
     path('transmission/', views.transmission, name='transmission'),
     
@@ -49,4 +54,8 @@ urlpatterns = [
 
     # API routes
     path('api/', include(api_router.urls)),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# For serving static files in development
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

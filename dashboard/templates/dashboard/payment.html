@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
   {% load static %}
   <link rel="stylesheet" href="{% static 'dashboard/css/payment.css' %}">
 </head>
+
 <body>
   <div class="dashboard-container">
     <aside class="sidebar">
@@ -61,10 +63,10 @@
         </li>
         <li class="menu-item">
           <form action="{% url 'logout' %}" method="post" style="display: inline;">
-              {% csrf_token %}
-              <button type="submit" class="menu-link logout-button">
-                  <span>⬅️</span> Logout
-              </button>
+            {% csrf_token %}
+            <button type="submit" class="menu-link logout-button">
+              <span>⬅️</span> Logout
+            </button>
           </form>
         </li>
       </ul>
@@ -75,15 +77,28 @@
         <h1>Adicionar nova chave PIX</h1>
       </header>
 
+      {% if messages %}
+      <div class="messages-container">
+        <ul class="messages">
+          {% for message in messages %}
+          <li class="{{ message.tags }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+
       <form class="payment-form" method="POST">
         {% csrf_token %}
         <div class="form-group">
           <label for="chave">Chave:</label>
-          <input type="text" id="chave" name="chave" placeholder="..." class="input-field">
+          <input type="text" id="chave" name="chave" placeholder="..." class="input-field" required>
         </div>
-
+        <div class="form-group">
+          <label for="description">Descrição:</label>
+          <input type="text" id="description" name="description" placeholder="Descrição opcional" class="input-field">
+        </div>
         <div class="form-actions">
-          <button type="submit" class="submit-btn">Salvar chave</button>
+          <button type="submit" class="submit-btn">Salvar chave e gerar QR Code</button>
         </div>
       </form>
 
@@ -93,40 +108,60 @@
           <thead>
             <tr>
               <th>Chave</th>
+              <th>Descrição</th>
+              <th>QR Code</th>
               <th>Ações</th>
             </tr>
           </thead>
           <tbody>
+            {% for pix in pix_payments %}
             <tr>
-              <td>000.000.000-00</td>
-              <td><button class="delete-btn">🗑️</button></td>
+              <td>{{ pix.pix_key }}</td>
+              <td>{{ pix.description }}</td>
+              <td>
+                {% if pix.qr_code_image %}
+                <img src="{{ pix.qr_code_image.url }}" alt="QR Code" class="qr-thumbnail">
+                {% else %}
+                <span>N/A</span>
+                {% endif %}
+              </td>
+              <td>
+                <form method="POST" action="{% url 'delete_pix_payment' pix.id %}">
+                  {% csrf_token %}
+                  <button type="button" class="delete-btn" data-delete-url="{% url 'delete_pix_payment' pix.id %}">🗑️</button>
+                </form>
+              </td>
             </tr>
+            {% empty %}
             <tr>
-              <td>00.000000/0000-00</td>
-              <td><button class="delete-btn">🗑️</button></td>
+              <td colspan="4">Nenhuma chave PIX cadastrada.</td>
             </tr>
-            <!-- Add more rows as needed -->
+            {% endfor %}
           </tbody>
         </table>
-        
-        <div class="pagination">
-          <button class="pagination-btn">Anterior</button>
-          <span class="page-indicator">Página 1 de 10</span>
-          <button class="pagination-btn">Próxima</button>
-        </div>
       </section>
     </main>
   </div>
 
-  <!-- Modal Structure -->
-  <div id="paymentModal" class="modal">
-    <div class="modal-content">
-      <h2>Chave PIX adicionada!</h2>
-      <p>A sua nova chave PIX foi adicionada com sucesso.</p>
-      <button id="closePaymentModal" class="modal-btn">OK</button>
+  <!-- Modal Overlay -->
+  <div id="deleteModal" class="modal-overlay" style="display: none;">
+    <!-- Modal Content -->
+    <div class="modal">
+      <div class="modal-header">
+        Confirmação de Exclusão
+      </div>
+      <div class="modal-content">
+        Tem certeza de que deseja excluir este item?
+      </div>
+      <div class="modal-footer">
+        <button id="cancelDelete" class="cancel-btn">Cancelar</button>
+        <button id="confirmDelete" class="confirm-btn">Sim, excluir</button>
+      </div>
     </div>
   </div>
 
   <script src="{% static 'dashboard/js/payment.js' %}"></script>
+
 </body>
+
 </html>
