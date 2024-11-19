@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.shortcuts import redirect
 from .forms import RegisterForm, EditUserForm, CategoryForm  
-from .models import User, Category, Client
+from .models import User, Category, Client, Order, OrderItem
 
 @login_required
 def dashboard(request):
@@ -86,7 +86,9 @@ def messages_list(request):
 
 @login_required
 def orders_list(request):
-    return render(request, 'dashboard/orders.html')
+    orders = Order.objects.all()
+    orders_item = OrderItem.objects.all()
+    return render(request, 'dashboard/orders.html', {'orders': orders, 'orders_item': orders_item})
 
 @login_required
 def payment_page(request):
