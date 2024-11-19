@@ -6,8 +6,8 @@ from django.http import HttpResponseForbidden
 from django.http import HttpResponse
 from django.contrib import messages
 from django.shortcuts import redirect
-from .forms import RegisterForm, EditUserForm, CategoryForm  
-from .models import User, Category, Client, Order, OrderItem
+from .forms import RegisterForm, EditUserForm, CategoryForm, PixPaymentForm  
+from .models import User, Category, Client, PixPayment, Order, OrderItem
 
 @login_required
 def dashboard(request):
@@ -92,7 +92,41 @@ def orders_list(request):
 
 @login_required
 def payment_page(request):
-    return render(request, 'dashboard/payment.html')
+    if request.method == 'POST':
+        pix_key = request.POST.get('chave')
+        description = request.POST.get('description', '')
+
+        if not pix_key:
+            messages.error(request, 'Chave PIX é obrigatória.')
+            return redirect('payment')
+
+        # Create a new PixPayment object
+        pix_payment = PixPayment.objects.create(
+            pix_key=pix_key,
+            description=description
+        )
+
+        # Generate QR code
+        pix_payment.generate_qr_code()
+
+        messages.success(request, 'Chave PIX salva e QR Code gerado com sucesso.')
+        return redirect('payment')
+
+    # Fetch existing PIX payments for display
+    pix_payments = PixPayment.objects.all()
+    return render(request, 'dashboard/payment.html', {'pix_payments': pix_payments})
+
+def delete_pix_payment(request, pix_id):
+    # Ensure it's a POST request or proper confirmation
+    if request.method == "POST":
+        pix_payment = get_object_or_404(PixPayment, id=pix_id)
+        pix_payment.delete()
+        messages.success(request, "Chave PIX excluída com sucesso!")
+        return redirect('payment')  # Redirect to payment list page
+    else:
+        # Return a response or raise a 405 Method Not Allowed
+        messages.error(request, "Operação inválida.")
+        return redirect('payment')
 
 @login_required
 def products(request):
