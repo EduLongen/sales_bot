@@ -307,30 +307,32 @@ button[type="submit"]:disabled {
 
 /* Styling for the messages container */
 .messages-container {
-  position: absolute;
-  top: 20px; /* Ensures it's near the top of the page */
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 400px; /* Matches form width */
-  text-align: center;
-  z-index: 1000; /* Ensures it's on top of other elements */
+  position: fixed; /* Keeps the messages visible even when scrolling */
+  top: 20px; /* Positions near the top */
+  left: 50%; /* Centers the container horizontally */
+  transform: translateX(-50%); /* Ensures the center alignment */
+  width: auto; /* Container width adjusts to the message width */
+  max-width: 90%; /* Restricts maximum width for long messages */
+  text-align: center; /* Centers the content within the container */
+  z-index: 1000; /* Keeps messages on top */
 }
 
 .messages {
-  list-style: none;
-  margin: 0;
+  display: inline-block; /* Allows the list to size based on its content */
+  margin: 0; /* Centers content */
   padding: 0;
+  list-style: none;
 }
 
 .messages li {
-  padding: 12px 16px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  font-size: 16px;
-  color: var(--success-700);
-  border: 1px solid var(--success-400);
-  width: 100%;
+  display: inline-block; /* Prevents the box from stretching */
+  padding: 12px 16px; /* Adds space inside the message box */
+  border-radius: 8px; /* Smooth corners */
+  font-size: 16px; /* Readable font size */
+  white-space: nowrap; /* Prevents text wrapping */
+  overflow: hidden; /* Hides any overflow */
+  text-overflow: ellipsis; /* Adds ellipsis if text overflows */
+  max-width: 600px; /* Restricts message width */
 }
 
 /* Specific styles based on message types */

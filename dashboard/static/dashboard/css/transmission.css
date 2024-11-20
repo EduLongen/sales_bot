@@ -352,6 +352,13 @@ textarea {
   color: var(--gray-600);
 }
 
+.input-field {
+  padding: 12px;
+  border: 1px solid var(--gray-300);
+  border-radius: 8px;
+  font-size: 16px;
+}
+
 .modal-btn {
   background-color: var(--blue-600);
   color: var(--gray-0);

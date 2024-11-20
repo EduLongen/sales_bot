@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'dashboard',
     'rest_framework',
     'django_extensions',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -115,6 +116,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
@@ -151,3 +157,8 @@ MESSAGE_TAGS = {
     messages.WARNING: 'warning',
     messages.ERROR: 'error',
 }
+
+import os
+
+MEDIA_URL = '/media/'  # This serves files at /media/ in URLs
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Files are stored here on disk

@@ -6,18 +6,47 @@ from django.http import HttpResponseForbidden
 from django.http import HttpResponse
 from django.contrib import messages
 from django.shortcuts import redirect
-from .forms import RegisterForm
-from .forms import EditUserForm
-from .models import User
-from .models import Client
+from .forms import RegisterForm, EditUserForm, CategoryForm, PixPaymentForm  
+from .models import User, Category, Client, PixPayment
+import requests
+from .utils import send_telegram_message
+
+
 
 @login_required
 def dashboard(request):
     return render(request, 'dashboard/dashboard.html', {'user': request.user})
 
-@login_required
 def add_category(request):
-    return render(request, 'dashboard/add_category.html')
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Categoria adicionada com sucesso!')
+            return redirect('categories')  
+    else:
+        form = CategoryForm()
+    return render(request, 'dashboard/add_category.html', {'form': form})
+
+@login_required
+def edit_category(request, id):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("You are not allowed to edit categories.")
+    
+    category = get_object_or_404(Category, pk=id)
+    
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            category = form.save(commit=False)
+            category.is_active = form.cleaned_data['is_active']
+            category.save()
+            messages.success(request, "Categoria atualizada com sucesso.")
+            return redirect('categories')
+    else:
+        form = CategoryForm(instance=category)
+    
+    return render(request, 'dashboard/categories.html', {'form': form, 'category': category})
 
 @login_required
 def add_message(request):
@@ -33,7 +62,8 @@ def add_user(request):
 
 @login_required
 def categories_list(request):
-    return render(request, 'dashboard/categories.html')
+    categories = Category.objects.all()
+    return render(request, 'dashboard/categories.html', {'categories': categories})
 
 @login_required
 def clients_list(request):
@@ -64,7 +94,41 @@ def orders_list(request):
 
 @login_required
 def payment_page(request):
-    return render(request, 'dashboard/payment.html')
+    if request.method == 'POST':
+        pix_key = request.POST.get('chave')
+        description = request.POST.get('description', '')
+
+        if not pix_key:
+            messages.error(request, 'Chave PIX é obrigatória.')
+            return redirect('payment')
+
+        # Create a new PixPayment object
+        pix_payment = PixPayment.objects.create(
+            pix_key=pix_key,
+            description=description
+        )
+
+        # Generate QR code
+        pix_payment.generate_qr_code()
+
+        messages.success(request, 'Chave PIX salva e QR Code gerado com sucesso.')
+        return redirect('payment')
+
+    # Fetch existing PIX payments for display
+    pix_payments = PixPayment.objects.all()
+    return render(request, 'dashboard/payment.html', {'pix_payments': pix_payments})
+
+def delete_pix_payment(request, pix_id):
+    # Ensure it's a POST request or proper confirmation
+    if request.method == "POST":
+        pix_payment = get_object_or_404(PixPayment, id=pix_id)
+        pix_payment.delete()
+        messages.success(request, "Chave PIX excluída com sucesso!")
+        return redirect('payment')  # Redirect to payment list page
+    else:
+        # Return a response or raise a 405 Method Not Allowed
+        messages.error(request, "Operação inválida.")
+        return redirect('payment')
 
 @login_required
 def products(request):
@@ -150,20 +214,38 @@ def delete_user(request, user_id):
 def transmission(request):
     if request.method == 'POST':
         message = request.POST.get('message')
+
+        if not message:
+            return render(request, 'dashboard/transmission.html', {
+                'error_message': 'A mensagem não pode estar vazia!'
+            })
+        
+
+        try:
+            chat_ids = Client.objects.values_list('chat_id', flat=True)
+            # print(chat_ids)
+            if not chat_ids:
+                return render(request, 'dashboard/transmission.html', {
+                    'error_message': 'Não há chat_ids registrados no banco de dados.'
+                })
+
+            errors = send_telegram_message(message, chat_ids)
+            print(f"Erros retornados: {errors}")
+            if errors:
+                return render(request, 'dashboard/transmission.html', {
+                    'error_message': f'Erro ao enviar mensagem: {errors}',
+                    'text': message
+                })
+
+            return render(request, 'dashboard/transmission.html', {
+                'success_message': 'Mensagens enviadas com sucesso!',
+                'text': message
+            })
+
+        except Exception as e:
+            return render(request, 'dashboard/transmission.html', {
+                'error_message': f'Ocorreu um erro inesperado: {str(e)}',
+                'text': message
+            })
+
     return render(request, 'dashboard/transmission.html')
-
-
-
-@login_required
-def send_telegram_message(message):
-    bot_token = '7503537602:AAEYJn9c0ePpu_hQiVxXnMeMF260-kYVbxs'
-    url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
-    
-    for chat_id in chat_ids:
-        data = {
-            'chat_id': chat_id,
-            'text': message
-        }
-        response = requests.post(url, data=data)
-        if not response.ok:
-            print(f"Erro ao enviar para o chat {chat_id}")
