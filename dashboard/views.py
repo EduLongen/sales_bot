@@ -216,36 +216,25 @@ def transmission(request):
         message = request.POST.get('message')
 
         if not message:
-            return render(request, 'dashboard/transmission.html', {
-                'error_message': 'A mensagem não pode estar vazia!'
-            })
-        
+            messages.error(request, 'A mensagem não pode estar vazia!')
+            return render(request, 'dashboard/transmission.html', {'text': message})
 
         try:
             chat_ids = Client.objects.values_list('chat_id', flat=True)
-            # print(chat_ids)
             if not chat_ids:
-                return render(request, 'dashboard/transmission.html', {
-                    'error_message': 'Não há chat_ids registrados no banco de dados.'
-                })
+                messages.error(request, 'Não há chat_ids registrados no banco de dados.')
+                return render(request, 'dashboard/transmission.html', {'text': message})
 
             errors = send_telegram_message(message, chat_ids)
-            print(f"Erros retornados: {errors}")
             if errors:
-                return render(request, 'dashboard/transmission.html', {
-                    'error_message': f'Erro ao enviar mensagem: {errors}',
-                    'text': message
-                })
+                messages.error(request, f'Erro ao enviar mensagem: {errors}')
+                return render(request, 'dashboard/transmission.html', {'text': message})
 
-            return render(request, 'dashboard/transmission.html', {
-                'success_message': 'Mensagens enviadas com sucesso!',
-                'text': message
-            })
+            messages.success(request, 'Mensagens enviadas com sucesso!')
+            return render(request, 'dashboard/transmission.html', {'text': message})
 
         except Exception as e:
-            return render(request, 'dashboard/transmission.html', {
-                'error_message': f'Ocorreu um erro inesperado: {str(e)}',
-                'text': message
-            })
+            messages.error(request, f'Ocorreu um erro inesperado: {str(e)}')
+            return render(request, 'dashboard/transmission.html', {'text': message})
 
     return render(request, 'dashboard/transmission.html')

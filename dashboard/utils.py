@@ -56,11 +56,8 @@ def send_telegram_message(message, chat_ids):
             'text': message
         }
         try:
-            print(f"Tentando enviar: {data}")  # Print antes da requisição
             response = requests.post(url, json=data)  # Certifique-se de usar json aqui
             print(f"Resposta do Telegram: {response.status_code}, {response.text}")
-            if not response.ok:
-                errors.append(f"Erro para chat_id {chat_id}: {response.text}")
         except requests.exceptions.RequestException as e:
             print(f"Erro de conexão: {e}")
             errors.append(f"Erro de conexão para chat_id {chat_id}: {str(e)}")
