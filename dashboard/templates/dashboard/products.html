@@ -99,15 +99,21 @@
             </thead>
             <tbody>
               {% for product in products %}
-              <tr data-id="{{ product.id }}">
+              <tr
+                data-id="{{ product.id }}"
+                data-name="{{ product.name }}"
+                data-category="{{ product.category.id }}"
+                data-price="{{ product.price }}"
+                data-active="{{ product.is_active|lower }}"
+                data-image-url="{{ product.image_url }}"
+                data-description="{{ product.description }}"
+              >
                 <td>{{ product.name }}</td>
                 <td>{{ product.category }}</td>
                 <td>{{ product.price }}</td>
                 <td>{% if product.is_active %}Sim{% else %}Não{% endif %}</td>
                 <td>
-                  <button class="edit-btn">
-                    ✏️
-                  </button>
+                  <button class="edit-btn">✏️</button>
                 </td>
               </tr>
               {% endfor %}
@@ -134,14 +140,29 @@
         >
           {% csrf_token %}
           <input type="hidden" name="id" id="editProductId" />
+
+          <label for="editImageUrl">Url da Imagem:</label>
+          <input type="text" id="editImageUrl" name="url" required />
+
           <label for="editProductName">Nome:</label>
           <input type="text" id="editProductName" name="name" required />
-          <label for="editProductPrice">Preço:</label>
-          <input type="number" id="editProductPrice" name="price" required />
+
+          <label for="editDescription">Descrição:</label>
+          <input type="text" id="editDescription" name="description" required />
+
           <label for="editProductStatus">Ativo:</label>
           <select id="editProductStatus" name="is_active" required>
             <option value="True">Sim</option>
             <option value="False">Não</option>
+          </select>
+
+          <label for="editProductPrice">Preço:</label>
+          <input type="number" id="editProductPrice" name="price" required />
+
+          <select id="editCategory" name="category" required>
+            {% for category in categories %}
+            <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
           </select>
           <button type="submit" class="modal-btn">Salvar</button>
         </form>

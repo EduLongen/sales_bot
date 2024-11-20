@@ -66,19 +66,23 @@ def edit_product(request, id):
         return HttpResponseForbidden("You are not allowed to edit products.")
     
     product = get_object_or_404(Product, pk=id)
+    categories = Category.objects.filter(is_active=True)
     
     if request.method == 'POST':
         form = ProductForm(request.POST, instance=product)
         if form.is_valid():
-            product = form.save(commit=False)
-            product.is_active = form.cleaned_data['is_active']
-            product.save()
+            form.save()
             messages.success(request, "Produto atualizado com sucesso.")
             return redirect('products')
     else:
         form = ProductForm(instance=product)
     
-    return render(request, 'dashboard/products.html', {'form': form, 'product': product})
+    return render(request, 'dashboard/products.html', {
+        'form': form, 
+        'product': product,
+        'categories': categories
+    })
+
 
 @login_required
 def add_user(request):
