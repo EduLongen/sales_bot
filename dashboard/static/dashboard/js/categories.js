@@ -17,7 +17,7 @@ function showEditCategoryModal(category) {
   editCategoryId.value = category.id;
   editCategoryName.value = category.name;
   editCategoryStatus.value = category.is_active === "Sim" ? "True" : "False";
-  editCategoryForm.action = `/dashboard/dashboard/categories/edit/${category.id}/`;
+  editCategoryForm.action = `/dashboard/categories/edit/${category.id}/`;
   editCategoryModal.style.display = "flex";
 }
 

@@ -54,10 +54,31 @@ def add_product(request):
         form = ProductForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Produto adicionado com sucesso!')
             return redirect('products')
     else:
         form = ProductForm()
     return render(request, 'dashboard/add_product.html', {'form': form})
+
+@login_required
+def edit_product(request, id):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("You are not allowed to edit products.")
+    
+    product = get_object_or_404(Product, pk=id)
+    
+    if request.method == 'POST':
+        form = ProductForm(request.POST, instance=product)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.is_active = form.cleaned_data['is_active']
+            product.save()
+            messages.success(request, "Produto atualizado com sucesso.")
+            return redirect('products')
+    else:
+        form = ProductForm(instance=product)
+    
+    return render(request, 'dashboard/products.html', {'form': form, 'product': product})
 
 @login_required
 def add_user(request):
@@ -100,7 +121,7 @@ def payment_page(request):
     return render(request, 'dashboard/payment.html')
 
 @login_required
-def list_products(request):
+def products_list(request):
     products = Product.objects.all()
     return render(request, 'dashboard/products.html', {'products': products})
 

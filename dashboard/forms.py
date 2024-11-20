@@ -66,10 +66,15 @@ class CategoryForm(forms.ModelForm):
         fields = ['name', 'is_active']
 
 
-    
-
-    
 class ProductForm(forms.ModelForm):
+    is_active = forms.BooleanField(
+        label='Ativo',
+        required=False,
+        initial=True,
+        widget=forms.CheckboxInput(attrs={'style': 'display: inline-block; width: auto; margin-right: 10px; vertical-align: middle;'})
+    )
     class Meta:
         model = Product
-        fields = [ 'image_url', 'name', 'description', 'category','price']
+        fields = ['image_url', 'name', 'description', 'category', 'price', 'is_active']
+
+    

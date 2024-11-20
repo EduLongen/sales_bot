@@ -1,116 +1,153 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Produtos</title>
-  {% load static %}
-  <link rel="stylesheet" href="{% static 'dashboard/css/products.css' %}">
-</head>
-<body>
-  <div class="dashboard-container">
-    <aside class="sidebar">
-      <ul class="menu">
-        <li class="menu-item">
-          <a href="{% url 'dashboard' %}" class="menu-link">
-            <span>⚡</span> Dashboard
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="{% url 'clients' %}" class="menu-link">
-            <span>👥</span> Clientes
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="{% url 'categories' %}" class="menu-link">
-            <span>📦</span> Categorias
-          </a>
-        </li>
-        <li class="menu-item active">
-          <a href="{% url 'products' %}" class="menu-link">
-            <span>🛒</span> Produtos
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="{% url 'orders' %}" class="menu-link">
-            <span>📑</span> Pedidos
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="{% url 'transmission' %}" class="menu-link">
-            <span>📡</span> Transmissão
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="{% url 'messages' %}" class="menu-link">
-            <span>✉️</span> Mensagens
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="{% url 'users' %}" class="menu-link">
-            <span>👤</span> Usuários
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="{% url 'payment' %}" class="menu-link">
-            <span>💳</span> Pagamento
-          </a>
-        </li>
-        <li class="menu-item">
-          <form action="{% url 'logout' %}" method="post" style="display: inline;">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Produtos</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'dashboard/css/products.css' %}" />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <aside class="sidebar">
+        <div class="logo">
+          <h2>Dashboard</h2>
+        </div>
+        <ul class="menu">
+          <li class="menu-item">
+            <a href="{% url 'dashboard' %}" class="menu-link">
+              <span>⚡</span> Dashboard
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'clients' %}" class="menu-link">
+              <span>👥</span> Clientes
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'categories' %}" class="menu-link">
+              <span>📦</span> Categorias
+            </a>
+          </li>
+          <li class="menu-item active">
+            <a href="{% url 'products' %}" class="menu-link">
+              <span>🛒</span> Produtos
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'orders' %}" class="menu-link">
+              <span>📑</span> Pedidos
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'transmission' %}" class="menu-link">
+              <span>📡</span> Transmissão
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'messages' %}" class="menu-link">
+              <span>✉️</span> Mensagens
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'users' %}" class="menu-link">
+              <span>👤</span> Usuários
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'payment' %}" class="menu-link">
+              <span>💳</span> Pagamento
+            </a>
+          </li>
+          <li class="menu-item">
+            <form
+              action="{% url 'logout' %}"
+              method="post"
+              style="display: inline"
+            >
               {% csrf_token %}
               <button type="submit" class="menu-link logout-button">
-                  <span>⬅️</span> Logout
+                <span>⬅️</span> Logout
               </button>
-          </form>
-        </li>
-      </ul>
-    </aside>
+            </form>
+          </li>
+        </ul>
+      </aside>
 
-    <main class="main-content">
-      <header class="header">
-        <h1>Produtos</h1>
-        <p>Gerencie e organize seus produtos.</p>
-      </header>
+      <main class="main-content">
+        <header class="header">
+          <h1>Produtos</h1>
+          <p>Gerencie e organize seus produtos.</p>
+        </header>
 
-      <section class="table-container">
-        <div class="search-container">
-          <a href="{% url 'add_product' %}" class="add-product-btn">Adicionar Produto</a>
-        </div>
+        <section class="table-container">
+          <div class="search-container">
+            <a href="{% url 'add_product' %}" class="add-product-btn"
+              >Adicionar Produto</a
+            >
+          </div>
 
-        <table class="produto-table">
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Categoria</th>
-              <th>Preço</th>
-              <th>Ativo</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for product in products %}
+          <table class="produto-table">
+            <thead>
               <tr>
+                <th>Nome</th>
+                <th>Categoria</th>
+                <th>Preço</th>
+                <th>Ativo</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for product in products %}
+              <tr data-id="{{ product.id }}">
                 <td>{{ product.name }}</td>
                 <td>{{ product.category }}</td>
                 <td>{{ product.price }}</td>
-                <td>{{ product.is_active|yesno:"Sim,Não" }}</td>
+                <td>{% if product.is_active %}Sim{% else %}Não{% endif %}</td>
                 <td>
-                  <!-- Ações como editar e deletar podem ser adicionadas aqui -->
+                  <button class="edit-btn">
+                    ✏️
+                  </button>
                 </td>
               </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+              {% endfor %}
+            </tbody>
+          </table>
 
-        <div class="pagination">
-          <button class="pagination-btn">Anterior</button>
-          <span class="page-indicator">Página 1 de 10</span>
-          <button class="pagination-btn">Próxima</button>
-        </div>
-      </section>
-    </main>
-  </div>
-</body>
+          <div class="pagination">
+            <button class="pagination-btn">Anterior</button>
+            <span class="page-indicator">Página 1 de 10</span>
+            <button class="pagination-btn">Próxima</button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="editProductModal" class="modal">
+      <div class="modal-content">
+        <span id="closeEditProductModal" class="close">&times;</span>
+        <h2>Editar Produto</h2>
+        <form
+          id="editProductForm"
+          method="post"
+          action="{% url 'edit_product' id=0 %}"
+        >
+          {% csrf_token %}
+          <input type="hidden" name="id" id="editProductId" />
+          <label for="editProductName">Nome:</label>
+          <input type="text" id="editProductName" name="name" required />
+          <label for="editProductPrice">Preço:</label>
+          <input type="number" id="editProductPrice" name="price" required />
+          <label for="editProductStatus">Ativo:</label>
+          <select id="editProductStatus" name="is_active" required>
+            <option value="True">Sim</option>
+            <option value="False">Não</option>
+          </select>
+          <button type="submit" class="modal-btn">Salvar</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="{% static 'dashboard/js/products.js' %}"></script>
+  </body>
 </html>
-
