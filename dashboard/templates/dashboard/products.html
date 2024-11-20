@@ -105,7 +105,7 @@
                 data-category="{{ product.category.id }}"
                 data-price="{{ product.price }}"
                 data-active="{{ product.is_active|lower }}"
-                data-image-url="{{ product.image_url }}"
+                data-image-url="{{ product.image_url}}"
                 data-description="{{ product.description }}"
               >
                 <td>{{ product.name }}</td>
@@ -142,7 +142,7 @@
           <input type="hidden" name="id" id="editProductId" />
 
           <label for="editImageUrl">Url da Imagem:</label>
-          <input type="text" id="editImageUrl" name="url" required />
+          <input type="text" id="editImageUrl" name="image_url" required />
 
           <label for="editProductName">Nome:</label>
           <input type="text" id="editProductName" name="name" required />
@@ -159,9 +159,12 @@
           <label for="editProductPrice">Preço:</label>
           <input type="number" id="editProductPrice" name="price" required />
 
+          <label for="editCategory">Categoria:</label>
           <select id="editCategory" name="category" required>
             {% for category in categories %}
             <option value="{{ category.id }}">{{ category.name }}</option>
+            {% empty %}
+            <option disabled>Nenhuma categoria disponível</option>
             {% endfor %}
           </select>
           <button type="submit" class="modal-btn">Salvar</button>

@@ -70,6 +70,8 @@ def edit_product(request, id):
     
     if request.method == 'POST':
         form = ProductForm(request.POST, instance=product)
+        print(form.errors)
+        print(form.cleaned_data)
         if form.is_valid():
             form.save()
             messages.success(request, "Produto atualizado com sucesso.")
@@ -79,8 +81,7 @@ def edit_product(request, id):
     
     return render(request, 'dashboard/products.html', {
         'form': form, 
-        'product': product,
-        'categories': categories
+        'product': product
     })
 
 
@@ -127,7 +128,8 @@ def payment_page(request):
 @login_required
 def products_list(request):
     products = Product.objects.all()
-    return render(request, 'dashboard/products.html', {'products': products})
+    categories = Category.objects.filter(is_active=True) 
+    return render(request, 'dashboard/products.html', {'products': products, 'categories': categories}) 
 
 @login_required
 def transmission(request):

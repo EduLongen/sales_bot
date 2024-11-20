@@ -30,7 +30,7 @@ function showEditProductModal(product) {
   editDescription.value = product.description || "";
   editProductPrice.value = product.price;
   console.log("Product ", product.is_active);
-  editProductStatus.value = product.is_active === "true" ? "True" : "False";
+  editProductStatus.value = product.is_active === true ? "True" : "False";
   editProductForm.action = `/dashboard/products/edit/${product.id}/`;
   editProductModal.style.display = "flex";
 }
@@ -43,13 +43,14 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("Edit button clicked");
       const productRow = event.target.closest("tr");
 
+      console.log("Product row", productRow.dataset);
       showEditProductModal({
         id: productRow.dataset.id,
         name: productRow.dataset.name,
         category_id: productRow.dataset.category,
         price: productRow.dataset.price,
-        is_active: productRow.dataset.is_active === "true", // Use lowercase "true"
-        image_url: productRow.dataset.image_url,
+        is_active: productRow.dataset.active === "true", // Use lowercase "true"
+        image_url: productRow.dataset.imageUrl,
         description: productRow.dataset.description,
       });
     });
