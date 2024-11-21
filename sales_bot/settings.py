@@ -91,7 +91,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'sales_bot_db',  # Your MySQL database name
         'USER': 'root',  # Your MySQL user (root by default)
-        'PASSWORD': 'TalathDirnen',  # Replace with your MySQL password
+        'PASSWORD': 'root',  # Replace with your MySQL password
         'HOST': 'localhost',     # Localhost if using MySQL locally
         'PORT': '3306',          # MySQL's default port
     }

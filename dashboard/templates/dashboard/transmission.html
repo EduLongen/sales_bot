@@ -75,32 +75,43 @@
 		<main class="main-content">
 			<header class="header">
 				<h1>Transmissão</h1>
-				<p>Envie uma mensagem para os seus clients.</p>
+				<p>Envie uma mensagem para os seus clientes.</p>
 			</header>
+			
+			{% if messages %}
+			<div class="messages-container">
+				<ul class="messages">
+					{% for message in messages %}
+						<li class="{{ message.tags }}">{{ message }}</li>
+					{% endfor %}
+				</ul>
+			</div>
+		{% endif %}
 
+		
 			<form method="POST" action="{% url 'transmission' %}">
 				{% csrf_token %}
-				<section class="transmission-container">
-					<textarea class="transmission-message" name="message" placeholder="Escreva sua mensagem..."
-						required></textarea>
-					<p class="alert-text">Atenção! Esta transmissão será enviada a todos os clientes da sua loja!</p>
-					<button type="submit" class="send-btn">Enviar</button>
-				</section>
-			</form>
-
+				<textarea name="message" class="transmission-message" placeholder="Escreva sua mensagem..." required>{{ text }}</textarea>
+				<button type="submit" class="send-btn">Enviar</button>
+			  </form>
+			  
+			
 		</main>
+		
+		
+		
 	</div>
 </body>
 
 <!-- Modal Structure -->
-<div id="transmissionModal" class="modal">
+<div id="transmissionModal" class="modal" style="display: none;">
 	<div class="modal-content">
-		<h2>Transmissão enviada!</h2>
-		<p>A nova transmissão foi enviada com sucesso.</p>
-		<button id="closeTransmissionModal" class="modal-btn">OK</button>
+	  <h2>Transmissão enviada!</h2>
+	  <p>A nova transmissão foi enviada com sucesso.</p>
+	  <button id="closeTransmissionModal" class="modal-btn">OK</button>
 	</div>
-</div>
-
+  </div>
+  
 <script src="{% static 'dashboard/js/transmission.js' %}"></script>
 
 </html>
