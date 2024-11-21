@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django import forms
-from .models import User, Category, PixPayment
+from .models import User, Category, PixPayment, Message
 
 User = get_user_model()
 
@@ -68,3 +68,16 @@ class PixPaymentForm(forms.ModelForm):
     class Meta:
         model = PixPayment
         fields = ['pix_key', 'description']
+
+
+class MessageForm(forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = ['name', 'description', 'text'] 
+        widgets = {
+            'text': forms.Textarea(attrs={  # Use the correct field name here as well
+                'rows': 5,
+                'cols': 60,
+                'placeholder': 'Digite sua mensagem aqui...',
+            }),
+        }

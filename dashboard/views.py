@@ -6,9 +6,8 @@ from django.http import HttpResponseForbidden
 from django.http import HttpResponse
 from django.contrib import messages
 from django.shortcuts import redirect
-from .forms import RegisterForm, EditUserForm, CategoryForm, PixPaymentForm  
-from .models import User, Category, Client, PixPayment, Order, OrderItem
-import requests
+from .forms import RegisterForm, EditUserForm, CategoryForm, PixPaymentForm, MessageForm
+from .models import User, Category, Client, PixPayment, Order, OrderItem, Message
 from .utils import send_telegram_message
 
 
@@ -242,3 +241,60 @@ def transmission(request):
             return render(request, 'dashboard/transmission.html', {'text': message})
 
     return render(request, 'dashboard/transmission.html')
+
+
+@login_required
+def messages_list(request):
+    mensagens2 = Message.objects.all().order_by('-created_at')  # Fetch all messages
+    return render(request, 'dashboard/messages.html', {'mensagens2': mensagens2})
+
+@login_required
+def add_message(request):
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.admin = request.user
+            message.save()
+            messages.success(request, 'Mensagem adicionada com sucesso!')
+            return redirect('messages') 
+        else:
+            messages.error(request, 'Erro ao adicionar a mensagem. Tente novamente.')
+    else:
+        form = MessageForm()
+
+    return render(request, 'dashboard/add_message.html', {'form': form})
+
+@login_required
+def edit_message(request, message_id):
+    message = get_object_or_404(Message, id=message_id)
+    
+    if not request.user.is_superuser and message.user != request.user:
+        messages.error(request, "Você não tem permissão para editar esta mensagem.")
+        return redirect('messages')
+    
+    if request.method == 'POST':
+        form = MessageForm(request.POST, instance=message)  
+        if form.is_valid():
+            form.save()  # Salva as alterações
+            messages.success(request, "Mensagem atualizada com sucesso.")
+            return redirect('messages')
+    else:
+        form = MessageForm(instance=message)  
+
+    return render(request, 'dashboard/edit_message.html', {'form': form, 'message': message})
+
+@login_required
+def delete_message(request, message_id):
+    message_to_delete = get_object_or_404(Message, id=message_id)
+    
+    if not request.user.is_superuser and message_to_delete.user != request.user:
+        messages.error(request, "Você não tem permissão para excluir esta mensagem.")
+        return redirect('messages')  
+
+    if request.method == 'POST':
+        message_to_delete.delete()
+        messages.success(request, "Mensagem deletada com sucesso.")
+        return redirect('messages')
+    return redirect('messages')

@@ -73,10 +73,22 @@
     </aside>
 
     <main class="main-content">
+
+      <!-- Header -->
       <header class="header">
         <h1>Mensagens</h1>
         <p>Gerencie suas mensagens.</p>
       </header>
+
+      {% if messages %}
+      <div class="messages-container">
+        <ul class="messages">
+          {% for message in messages %}
+          <li class="{{ message.tags }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
 
       <!-- Search bar and messages table -->
       <section class="table-container">
@@ -84,75 +96,62 @@
           <input type="text" class="search-bar" placeholder="🔍 Buscar mensagem">
           <a href="{% url 'add_message' %}" class="add-product-btn">Adicionar Mensagem</a>
         </div>
+        
+        <section class="table-container">
+          <table class="message-table">
+            <thead>
+              <tr>
+                <th>name</th>
+                <th>content</th>
+                <th>Descrição</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for message in mensagens2 %}
+              <tr>
+                <td>{{ message.name }}</td>
+                <td>{{ message.text }}</td>
+                <td>{{ message.description }}</td>
+                <td>{{ message.description }}</td>
+                {% if request.user.is_superuser %}
+                <td>
 
-        <table class="message-table">
-          <thead>
-            <tr>
-              <th>Descrição</th>
-              <th>Texto</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Início</td>
-              <td>Loja online :)</td>
-              <td>
-                <button class="edit-btn">✏️</button>
-                <button class="delete-btn">🗑️</button>
-              </td>
-            </tr>
-            <tr>
-              <td>Pedido</td>
-              <td>Pedido criado. Seu pedido será preparado e entregue no seu endereço. O tempo estimado de entrega é de 30 a 45 minutos.</td>
-              <td>
-                <button class="edit-btn">✏️</button>
-                <button class="delete-btn">🗑️</button>
-              </td>
-            </tr>
-            <tr>
-              <td>Criado</td>
-              <td>&lt;b&gt;Carrinho&lt;/b&gt;: -Nome: %PRODUCT_NAME%, -Descrição: %PRODUCT_DESCRIPTION%, Preço: %PRODUCT_PRICE% un. * %PRODUCT_QUANTITY% total = %PRODUCT_TOTAL_PRICE% R$.</td>
-              <td>
-                <button class="edit-btn">✏️</button>
-                <button class="delete-btn">🗑️</button>
-              </td>
-            </tr>
-            <tr>
-              <td>Promoção</td>
-              <td>Não perca! Temos uma oferta especial em todas as pizzas. Compre uma pizza e leve outra pela metade do preço! Oferta válida até o final do mês.</td>
-              <td>
-                <button class="edit-btn">✏️</button>
-                <button class="delete-btn">🗑️</button>
-              </td>
-            </tr>
-            <tr>
-              <td>Lembrete</td>
-              <td>Sua assinatura está prestes a expirar. Renove sua assinatura hoje para continuar desfrutando de nossos serviços premium sem interrupções.</td>
-              <td>
-                <button class="edit-btn">✏️</button>
-                <button class="delete-btn">🗑️</button>
-              </td>
-            </tr>
-            <tr>
-              <td>Agradecimento</td>
-              <td>Obrigado pela sua compra! Esperamos que você aproveite sua refeição. Não se esqueça de nos avaliar e nos dizer como foi sua experiência!</td>
-              <td>
-                <button class="edit-btn">✏️</button>
-                <button class="delete-btn">🗑️</button>
-              </td>
-            </tr>
-            <tr>
-              <td>Solicitação de Feedback</td>
-              <td>Valorizamos sua opinião! Por favor, tire um momento para avaliar seu pedido recente e compartilhar qualquer feedback para nos ajudar a melhorar nossos serviços.</td>
-              <td>
-                <button class="edit-btn">✏️</button>
-                <button class="delete-btn">🗑️</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                  <a href="{% url 'edit_message' message.id %}" class="edit-btn">✏️</a>
 
+                  <form action="{% url 'delete_message' message.id %}" method="post" id="deleteFormTrigger" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="button" class="delete-btn" >🗑️</button>
+                  </form>
+
+                </td>
+                {% endif %}
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="3">Nenhuma mensagem encontrada.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+        <!-- Modal Delete -->
+        <div class="modal-overlay" id="deleteModal" style="display: none;">
+          <div class="modal">
+            <div class="modal-header">Confirmação de Exclusão</div>
+            <div class="modal-content">
+              <p>Tem certeza de que deseja excluir esta mensagem?<br>Esta ação não pode ser desfeita.</p>
+            </div>
+              <div class="modal-footer">
+              <button class="cancel-btn" onclick="closeModal()">Cancelar</button>
+              <form id="deleteForm" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="confirm-btn">Confirmar</button>
+              </form>
+            </div>
+          </div>
+        </div>
+ 
         <div class="pagination">
           <button class="pagination-btn">Anterior</button>
           <span class="page-indicator">Página 1 de 10</span>
@@ -162,5 +161,8 @@
     </main>
   </div>
 </body>
+
+
+<script src="{% static 'dashboard/js/messages.js' %}"></script>
 
 </html>
