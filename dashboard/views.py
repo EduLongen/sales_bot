@@ -7,7 +7,10 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.shortcuts import redirect
 from .forms import RegisterForm, EditUserForm, CategoryForm, PixPaymentForm  
-from .models import User, Category, Client, PixPayment
+from .models import User, Category, Client, PixPayment, Order, OrderItem
+import requests
+from .utils import send_telegram_message
+
 
 @login_required
 def dashboard(request):
@@ -89,7 +92,9 @@ def messages_list(request):
 
 @login_required
 def orders_list(request):
-    return render(request, 'dashboard/orders.html')
+    orders = Order.objects.all()
+    orders_item = OrderItem.objects.all()
+    return render(request, 'dashboard/orders.html', {'orders': orders, 'orders_item': orders_item})
 
 @login_required
 def payment_page(request):
@@ -208,3 +213,32 @@ def delete_user(request, user_id):
         return redirect('users')
 
     return redirect('users')
+
+@login_required
+def transmission(request):
+    if request.method == 'POST':
+        message = request.POST.get('message')
+
+        if not message:
+            messages.error(request, 'A mensagem não pode estar vazia!')
+            return render(request, 'dashboard/transmission.html', {'text': message})
+
+        try:
+            chat_ids = Client.objects.values_list('chat_id', flat=True)
+            if not chat_ids:
+                messages.error(request, 'Não há chat_ids registrados no banco de dados.')
+                return render(request, 'dashboard/transmission.html', {'text': message})
+
+            errors = send_telegram_message(message, chat_ids)
+            if errors:
+                messages.error(request, f'Erro ao enviar mensagem: {errors}')
+                return render(request, 'dashboard/transmission.html', {'text': message})
+
+            messages.success(request, 'Mensagens enviadas com sucesso!')
+            return render(request, 'dashboard/transmission.html', {'text': message})
+
+        except Exception as e:
+            messages.error(request, f'Ocorreu um erro inesperado: {str(e)}')
+            return render(request, 'dashboard/transmission.html', {'text': message})
+
+    return render(request, 'dashboard/transmission.html')
