@@ -80,6 +80,16 @@
           <p>Gerencie e organize seus produtos.</p>
         </header>
 
+        {% if messages %}
+        <div class="messages-container">
+          <ul class="messages">
+            {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
         <section class="table-container">
           <div class="search-container">
             <a href="{% url 'add_product' %}" class="add-product-btn"
@@ -133,32 +143,28 @@
       <div class="modal-content">
         <span id="closeEditProductModal" class="close">&times;</span>
         <h2>Editar Produto</h2>
-        <form
-          id="editProductForm"
-          method="post"
-          action="{% url 'edit_product' id=0 %}"
-        >
+        <form id="editProductForm" method="post" action="{% url 'edit_product' id=0 %}">
           {% csrf_token %}
           <input type="hidden" name="id" id="editProductId" />
-
+    
           <label for="editImageUrl">Url da Imagem:</label>
           <input type="text" id="editImageUrl" name="image_url" required />
-
+    
           <label for="editProductName">Nome:</label>
           <input type="text" id="editProductName" name="name" required />
-
+    
           <label for="editDescription">Descrição:</label>
           <input type="text" id="editDescription" name="description" required />
-
+    
           <label for="editProductStatus">Ativo:</label>
           <select id="editProductStatus" name="is_active" required>
             <option value="True">Sim</option>
             <option value="False">Não</option>
           </select>
-
+    
           <label for="editProductPrice">Preço:</label>
           <input type="number" id="editProductPrice" name="price" required />
-
+    
           <label for="editCategory">Categoria:</label>
           <select id="editCategory" name="category" required>
             {% for category in categories %}

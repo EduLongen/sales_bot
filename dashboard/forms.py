@@ -76,7 +76,13 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ['image_url', 'name', 'description', 'category', 'price', 'is_active']
-
+        labels = {
+            'image_url': 'Imagem',
+            'name': 'Nome',
+            'description': 'Descrição',
+            'category': 'Categoria',
+            'price': 'Preço',
+        }
     
 class PixPaymentForm(forms.ModelForm):
     class Meta:

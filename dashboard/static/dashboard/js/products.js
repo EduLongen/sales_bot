@@ -1,5 +1,4 @@
-const editProductModal = document.getElementById("editProductModal");
-const closeEditProductModal = document.getElementById("closeEditProductModal");
+const editProductModal = document.querySelector(".modal-overlay");
 const editProductForm = document.getElementById("editProductForm");
 const editProductId = document.getElementById("editProductId");
 const editProductName = document.getElementById("editProductName");
@@ -8,6 +7,8 @@ const editProductStatus = document.getElementById("editProductStatus");
 const editImageUrl = document.getElementById("editImageUrl");
 const editDescription = document.getElementById("editDescription");
 const editCategory = document.getElementById("editCategory");
+const cancelButton = document.querySelector(".cancel-btn");
+const confirmButton = document.querySelector(".confirm-btn");
 
 function hideEditProductModal() {
   editProductModal.style.display = "none";
@@ -15,10 +16,9 @@ function hideEditProductModal() {
 
 function showEditProductModal(product) {
   console.log("Opening modal with product:", product); // Verifique os dados
-
   editProductId.value = product.id;
   editProductName.value = product.name;
-  editImageUrl.value = product.image_url ;
+  editImageUrl.value = product.image_url;
   if (editCategory && editCategory.options) {
     for (let i = 0; i < editCategory.options.length; i++) {
       if (editCategory.options[i].value == product.category_id) {
@@ -34,6 +34,7 @@ function showEditProductModal(product) {
   editProductForm.action = `/dashboard/products/edit/${product.id}/`;
   editProductModal.style.display = "flex";
 }
+
 document.addEventListener("DOMContentLoaded", () => {
   const editButtons = document.querySelectorAll(".edit-btn");
   console.log(`Found ${editButtons.length} edit buttons`);
@@ -55,16 +56,25 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   });
+
+ // Close the modal when cancel button is clicked
+ cancelButton.addEventListener('click', function () {
+  closeModal();
 });
 
-closeEditProductModal.addEventListener("click", hideEditProductModal);
-
-editProductForm.addEventListener("submit", function (event) {
-  hideEditProductModal();
-});
-
-window.addEventListener("click", function (event) {
-  if (event.target === editProductModal) {
+  
+  confirmButton.addEventListener("click", function (event) {
     hideEditProductModal();
+  });
+
+});
+
+// Messages Timer: Hide messages after 5 seconds
+document.addEventListener("DOMContentLoaded", function () {
+  const messagesContainer = document.querySelector(".messages-container");
+  if (messagesContainer) {
+    setTimeout(() => {
+      messagesContainer.style.display = "none";
+    }, 5000);
   }
 });

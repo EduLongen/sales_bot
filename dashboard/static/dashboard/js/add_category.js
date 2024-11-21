@@ -25,3 +25,13 @@ document
 closeCategoryModal.addEventListener("click", function () {
   hideCategoryModalAndRedirect(); // Hide modal and redirect to the categories page
 });
+
+// Messages Timer: Hide messages after 5 seconds
+document.addEventListener('DOMContentLoaded', function () {
+  const messagesContainer = document.querySelector('.messages-container');
+  if (messagesContainer) {
+    setTimeout(() => {
+      messagesContainer.style.display = 'none';
+    }, 5000);
+  }
+});

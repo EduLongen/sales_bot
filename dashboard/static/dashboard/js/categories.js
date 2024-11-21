@@ -1,13 +1,10 @@
 const editCategoryModal = document.getElementById("editCategoryModal");
-const closeEditCategoryModal = document.getElementById(
-  "closeEditCategoryModal"
-);
 const editCategoryForm = document.getElementById("editCategoryForm");
 const editCategoryId = document.getElementById("editCategoryId");
 const editCategoryName = document.getElementById("editCategoryName");
 const editCategoryStatus = document.getElementById("editCategoryStatus");
-
-
+const cancelButton = document.querySelector('.cancel-btn');
+const confirmButton = document.querySelector('.confirm-btn');
 
 function hideEditCategoryModal() {
   editCategoryModal.style.display = "none";
@@ -37,7 +34,10 @@ document.querySelectorAll(".edit-btn").forEach((button) => {
   });
 });
 
-closeEditCategoryModal.addEventListener("click", hideEditCategoryModal);
+// Close the modal when cancel button is clicked
+cancelButton.addEventListener('click', function () {
+  closeModal();
+});
 
 editCategoryForm.addEventListener("submit", function (event) {
   hideEditCategoryModal();
@@ -54,5 +54,15 @@ window.addEventListener("click", function (event) {
 window.addEventListener("click", function (event) {
   if (event.target === editCategoryModal) {
     hideEditCategoryModal();
+  }
+});
+
+// Messages Timer: Hide messages after 5 seconds
+document.addEventListener('DOMContentLoaded', function () {
+  const messagesContainer = document.querySelector('.messages-container');
+  if (messagesContainer) {
+    setTimeout(() => {
+      messagesContainer.style.display = 'none';
+    }, 5000);
   }
 });
