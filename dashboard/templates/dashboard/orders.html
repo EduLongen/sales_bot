@@ -1,124 +1,154 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pedidos</title>
-  {% load static %}
-  <link rel="stylesheet" href="{% static 'dashboard/css/orders.css' %}">
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pedidos</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'dashboard/css/orders.css' %}" />
+  </head>
 
-<body>
-  <div class="dashboard-container">
-    <aside class="sidebar">
-      <div class="logo">
-        <h2>Dashboard</h2>
-      </div>
-      <ul class="menu">
-        <li class="menu-item">
-          <a href="{% url 'dashboard' %}" class="menu-link">
-            <span>⚡</span> Dashboard
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="{% url 'clients' %}" class="menu-link">
-            <span>👥</span> Clientes
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="{% url 'categories' %}" class="menu-link">
-            <span>📦</span> Categorias
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="{% url 'products' %}" class="menu-link">
-            <span>🛒</span> Produtos
-          </a>
-        </li>
-        <li class="menu-item active">
-          <a href="{% url 'orders' %}" class="menu-link">
-            <span>📑</span> Pedidos
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="{% url 'transmission' %}" class="menu-link">
-            <span>📡</span> Transmissão
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="{% url 'messages' %}" class="menu-link">
-            <span>✉️</span> Mensagens
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="{% url 'users' %}" class="menu-link">
-            <span>👤</span> Usuários
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="{% url 'payment' %}" class="menu-link">
-            <span>💳</span> Pagamento
-          </a>
-        </li>
-        <li class="menu-item">
-          <form action="{% url 'logout' %}" method="post" style="display: inline;">
+  <body>
+    <div class="dashboard-container">
+      <aside class="sidebar">
+        <div class="logo">
+          <h2>Dashboard</h2>
+        </div>
+        <ul class="menu">
+          <li class="menu-item">
+            <a href="{% url 'dashboard' %}" class="menu-link">
+              <span>⚡</span> Dashboard
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'clients' %}" class="menu-link">
+              <span>👥</span> Clientes
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'categories' %}" class="menu-link">
+              <span>📦</span> Categorias
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'products' %}" class="menu-link">
+              <span>🛒</span> Produtos
+            </a>
+          </li>
+          <li class="menu-item active">
+            <a href="{% url 'orders' %}" class="menu-link">
+              <span>📑</span> Pedidos
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'transmission' %}" class="menu-link">
+              <span>📡</span> Transmissão
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'messages' %}" class="menu-link">
+              <span>✉️</span> Mensagens
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'users' %}" class="menu-link">
+              <span>👤</span> Usuários
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'payment' %}" class="menu-link">
+              <span>💳</span> Pagamento
+            </a>
+          </li>
+          <li class="menu-item">
+            <form
+              action="{% url 'logout' %}"
+              method="post"
+              style="display: inline"
+            >
               {% csrf_token %}
               <button type="submit" class="menu-link logout-button">
-                  <span>⬅️</span> Logout
+                <span>⬅️</span> Logout
               </button>
-          </form>
-        </li>
-      </ul>
-    </aside>
+            </form>
+          </li>
+        </ul>
+      </aside>
 
-    <main class="main-content">
-      <header class="header">
-        <h1>Pedidos</h1>
-        <p>Gerencie e acompanhe seus pedidos.</p>
-      </header>
+      <main class="main-content">
+        <header class="header">
+          <h1>Pedidos</h1>
+          <p>Gerencie e acompanhe seus pedidos.</p>
+        </header>
 
-      <!-- Search bar -->
-      <section class="table-container">
-        <div class="search-container">
-          <input type="text" class="search-bar" placeholder="🔍 Buscar pedido">
-        </div>
+        <!-- Search bar -->
+        <section class="table-container">
+          <div class="search-container">
+            <input
+              type="text"
+              class="search-bar"
+              placeholder="🔍 Buscar pedido"
+            />
+          </div>
 
-        <table class="pedido-table">
-          <thead>
-            <tr>
-              <th>Cliente</th>
-              <th>Produtos</th>
-              <th>Data</th>
-              <th>Status</th>
-              <th>Valor</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Example rows -->
-            <tr>
-              <td>Ana Maria Silva</td>
-              <td>Sanduíche de Frango, Batata Frita...</td>
-              <td>18:45 - 15/09/2024</td>
-              <td>Sendo preparado</td>
-              <td>R$ 38,50</td>
-              <td>
-                <button class="edit-btn">✏️</button>
-                <button class="delete-btn">🗑️</button>
-              </td>
-            </tr>
-            <!-- Add more rows as needed -->
-          </tbody>
-        </table>
+          <table class="pedido-table">
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Produtos</th>
+                <th>Data</th>
+                <th>Status</th>
+                <th>Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in orders %}
+              <tr class="order-row">
+                <td>{{ order.client }}</td>
+                <td class="products" onclick="toggleDetails(this)">
+                  {% for order_item in orders_item %}
+                    {{ order_item.quantity }} {{ order_item.product }}{% if not forloop.last %}, {% endif %}
+                  {% endfor %}
+                </td>
+                <td>{{ order.created_at }}</td>
+                <td>{{ order.status }}</td>
+                <td>{{ order.total }}</td>
+              </tr>
+              <tr class="order-details" style="display: none;">
+                <td colspan="5">
+                  <strong>Detalhes dos produtos:</strong>
+                  <ul>
+                    {% for order_item in orders_item %}
+                    <li>{{ order_item.quantity }}x {{ order_item.product }} - {{ order_item.price }}</li>
+                    {% endfor %}
+                  </ul>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5">Nenhum pedido encontrado.</td>
+              </tr>
+              {% endfor %}
+            </tbody>            
+          </table>
 
-        <div class="pagination">
-          <button class="pagination-btn">Anterior</button>
-          <span class="page-indicator">Página 1 de 10</span>
-          <button class="pagination-btn">Próxima</button>
-        </div>
-      </section>
-    </main>
-  </div>
-</body>
-
+          <div class="pagination">
+            <button class="pagination-btn">Anterior</button>
+            <span class="page-indicator">Página 1 de 10</span>
+            <button class="pagination-btn">Próxima</button>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script>
+      function toggleDetails(element) {
+        const detailsRow = element.closest('tr').nextElementSibling;
+        if (detailsRow.style.display === "none" || !detailsRow.style.display) {
+          detailsRow.style.display = "table-row";
+        } else {
+          detailsRow.style.display = "none";
+        }
+      }
+    </script>    
+  </body>
 </html>

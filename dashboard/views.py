@@ -7,7 +7,8 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.shortcuts import redirect
 from .forms import RegisterForm, EditUserForm, CategoryForm, MessageForm, PixPaymentForm  
-from .models import User, Category, Client, Message, PixPayment
+from .models import User, Category, Client, Message, PixPayment, Order, OrderItem
+from .utils import send_telegram_message
 
 @login_required
 def dashboard(request):
@@ -63,7 +64,7 @@ def categories_list(request):
 
 @login_required
 def clients_list(request):
-    clients = Client.objects.all()
+    clients = Client.objects.filter(is_deleted=False)
     return render(request, 'dashboard/clients.html', {'clients': clients})
 
 @login_required
@@ -71,11 +72,14 @@ def delete_client(request, client_id):
     if not request.user.is_superuser:
         return HttpResponseForbidden("You are not allowed to delete clients.")
     
+    # Recupera o cliente, mesmo que não deletado
     client_to_delete = get_object_or_404(Client, id=client_id)
 
     if request.method == 'POST':
-        client_to_delete.delete()
-        messages.success(request, "Cliente deletado com sucesso.")
+        # Marca como deletado em vez de remover o registro
+        client_to_delete.is_deleted = True
+        client_to_delete.save()
+        messages.success(request, "Cliente marcado como deletado com sucesso.")
         return redirect('clients')
 
     return redirect('clients')
@@ -86,7 +90,9 @@ def messages_list(request):
 
 @login_required
 def orders_list(request):
-    return render(request, 'dashboard/orders.html')
+    orders = Order.objects.all()
+    orders_item = OrderItem.objects.all()
+    return render(request, 'dashboard/orders.html', {'orders': orders, 'orders_item': orders_item})
 
 @login_required
 def payment_page(request):
@@ -290,3 +296,31 @@ def delete_pix_key(request, pk):
         pix_key.delete()
         messages.success(request, 'Chave Pix deletada com sucesso!')
     return redirect('payment') 
+
+    def transmission(request):
+    if request.method == 'POST':
+        message = request.POST.get('message')
+
+        if not message:
+            messages.error(request, 'A mensagem não pode estar vazia!')
+            return render(request, 'dashboard/transmission.html', {'text': message})
+
+        try:
+            chat_ids = Client.objects.values_list('chat_id', flat=True)
+            if not chat_ids:
+                messages.error(request, 'Não há chat_ids registrados no banco de dados.')
+                return render(request, 'dashboard/transmission.html', {'text': message})
+
+            errors = send_telegram_message(message, chat_ids)
+            if errors:
+                messages.error(request, f'Erro ao enviar mensagem: {errors}')
+                return render(request, 'dashboard/transmission.html', {'text': message})
+
+            messages.success(request, 'Mensagens enviadas com sucesso!')
+            return render(request, 'dashboard/transmission.html', {'text': message})
+
+        except Exception as e:
+            messages.error(request, f'Ocorreu um erro inesperado: {str(e)}')
+            return render(request, 'dashboard/transmission.html', {'text': message})
+
+    return render(request, 'dashboard/transmission.html')
