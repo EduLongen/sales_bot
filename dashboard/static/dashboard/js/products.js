@@ -1,4 +1,4 @@
-const editProductModal = document.querySelector(".modal-overlay");
+const editProductModal = document.getElementById("editProductModal");
 const editProductForm = document.getElementById("editProductForm");
 const editProductId = document.getElementById("editProductId");
 const editProductName = document.getElementById("editProductName");
@@ -15,23 +15,28 @@ function hideEditProductModal() {
 }
 
 function showEditProductModal(product) {
-  console.log("Opening modal with product:", product); // Verifique os dados
+  console.log("Opening modal with product:", product);
+  
+  // Set form values
   editProductId.value = product.id;
   editProductName.value = product.name;
   editImageUrl.value = product.image_url;
-  if (editCategory && editCategory.options) {
-    for (let i = 0; i < editCategory.options.length; i++) {
-      if (editCategory.options[i].value == product.category_id) {
-        editCategory.selectedIndex = i;
-        break;
-      }
-    }
-  }
   editDescription.value = product.description || "";
   editProductPrice.value = product.price;
-  console.log("Product ", product.is_active);
-  editProductStatus.value = product.is_active === true ? "True" : "False";
+  
+  // Set category
+  if (editCategory) {
+    editCategory.value = product.category_id;
+  }
+  
+  // Set active status
+  editProductStatus.value = product.is_active ? "True" : "False";
+  
+  // Update form action
   editProductForm.action = `/dashboard/products/edit/${product.id}/`;
+  
+  // Ensure modal is displayed using flex
+  console.log("Displaying modal");
   editProductModal.style.display = "flex";
 }
 
@@ -50,24 +55,24 @@ document.addEventListener("DOMContentLoaded", () => {
         name: productRow.dataset.name,
         category_id: productRow.dataset.category,
         price: productRow.dataset.price,
-        is_active: productRow.dataset.active === "true", // Use lowercase "true"
+        is_active: productRow.dataset.active === "true", 
         image_url: productRow.dataset.imageUrl,
         description: productRow.dataset.description,
       });
     });
   });
 
- // Close the modal when cancel button is clicked
- cancelButton.addEventListener('click', function () {
-  closeModal();
-});
-
-  
-  confirmButton.addEventListener("click", function (event) {
+  // Fechar o modal quando o botão de cancelar é clicado
+  cancelButton.addEventListener('click', function (event) {
+    event.preventDefault(); 
     hideEditProductModal();
   });
 
+  confirmButton.addEventListener("click", function (event) {
+    hideEditProductModal();
+  });
 });
+
 
 // Messages Timer: Hide messages after 5 seconds
 document.addEventListener("DOMContentLoaded", function () {

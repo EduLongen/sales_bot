@@ -118,36 +118,32 @@
             </tbody>
           </table>
 
-          <div class="pagination">
-            <button class="pagination-btn">Anterior</button>
-            <span class="page-indicator">Página 1 de 10</span>
-            <button class="pagination-btn">Próxima</button>
-          </div>
-        </section>
-      </main>
-    </div>
 
     <div id="editCategoryModal" class="modal-overlay">
       <div class="modal">
-      <div class="modal-header">Editar Categoria</div>
-      <div class="modal-body">
-        <form id="editCategoryForm" method="post" action="{% url 'edit_category' id=0 %}">
-          {% csrf_token %}
-          <input type="hidden" name="id" id="editCategoryId" />
-          <label for="editCategoryName">Nome:</label>
-          <input type="text" id="editCategoryName" name="name" required />
-          <label for="editCategoryStatus">Ativo:</label>
-          <select id="editCategoryStatus" name="is_active" required>
-            <option value="True">Sim</option>
-            <option value="False">Não</option>
-          </select>
-          <div class="modal-footer">
-            <button class="cancel-btn">Cancelar</button>
-            <button type="submit" class="confirm-btn">Salvar</button>
-          </div>
-        </form>
+        <div class="modal-header">Editar Categoria</div>
+        <div class="modal-body">
+          <form
+            id="editCategoryForm"
+            method="post"
+            action="{% url 'edit_category' id=0 %}"
+          >
+            {% csrf_token %}
+            <input type="hidden" name="id" id="editCategoryId" />
+            <label for="editCategoryName">Nome:</label>
+            <input type="text" id="editCategoryName" name="name" required />
+            <label for="editCategoryStatus">Ativo:</label>
+            <select id="editCategoryStatus" name="is_active" required>
+              <option value="True">Sim</option>
+              <option value="False">Não</option>
+            </select>
+            <div class="modal-footer">
+              <button type="button" class="cancel-btn">Cancelar</button>
+              <button type="submit" class="confirm-btn">Salvar</button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
     </div>
 
     <script src="{% static 'dashboard/js/categories.js' %}"></script>

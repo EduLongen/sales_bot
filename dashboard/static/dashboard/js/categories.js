@@ -35,21 +35,14 @@ document.querySelectorAll(".edit-btn").forEach((button) => {
 });
 
 // Close the modal when cancel button is clicked
-cancelButton.addEventListener('click', function () {
-  closeModal();
+cancelButton.addEventListener('click', function (event) {
+  event.preventDefault();
+  hideEditCategoryModal();
 });
 
 editCategoryForm.addEventListener("submit", function (event) {
   hideEditCategoryModal();
 });
-
-window.addEventListener("click", function (event) {
-  if (event.target === editCategoryModal) {
-    hideEditCategoryModal();
-  }
-});
-
-
 
 window.addEventListener("click", function (event) {
   if (event.target === editCategoryModal) {
