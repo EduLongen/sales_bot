@@ -85,7 +85,7 @@ from rest_framework.exceptions import NotFound
 class OrderCreateView(generics.CreateAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def perform_create(self, serializer):
         chat_id = self.request.data.get('client_chat_id')
