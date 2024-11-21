@@ -69,10 +69,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   confirmButton.addEventListener("click", function (event) {
-    hideEditProductModal();
+    event.preventDefault();  // Impede que o formulário seja enviado diretamente
+    editProductForm.submit(); // Submete o formulário
   });
-});
 
+});
 
 // Messages Timer: Hide messages after 5 seconds
 document.addEventListener("DOMContentLoaded", function () {
