@@ -1,5 +1,9 @@
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.db import models
+from django.core.files import File
+from io import BytesIO
+from django.utils.text import slugify
+import qrcode
 
 class User(AbstractUser):
     ROLE_CHOICES = [
@@ -99,10 +103,26 @@ class PixPayment(models.Model):
     pix_key = models.CharField(max_length=50)
     description = models.TextField(max_length=255, blank=True, null=True)
     qr_code_url = models.URLField(max_length=255, blank=True, null=True)
+    qr_code_image = models.ImageField(upload_to='qr_codes', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Pix Payment {self.id} - {self.pix_key}"
+
+    def generate_qr_code(self):
+        from .utils import generate_pix_qr_code
+        
+        # Generate QR Code Buffer
+        qr_buffer = generate_pix_qr_code(self)
+        
+        # Save the QR Code Image
+        self.qr_code_image.save(f'pix_qr_{slugify(self.description)}_{self.id}.png', File(qr_buffer), save=False)
+        
+        # Generate QR Code URL (Example: for API, dynamic hostname usage)
+        self.qr_code_url = f'/media/{self.qr_code_image.name}'  # Assuming static MEDIA_PATH.
+        
+        # Save Model Changes
+        self.save()
 
 
 class JWT(models.Model):

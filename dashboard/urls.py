@@ -1,19 +1,20 @@
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
 from . import views, api_views  # Assuming you have api_views for API endpoints
 from django.contrib.auth import views as auth_views
+from rest_framework.authtoken.views import obtain_auth_token
 
 # Setting up the API router for REST API views
 api_router = DefaultRouter()
-api_router.register(r'users', api_views.UserViewSet)
 api_router.register(r'clients', api_views.ClientViewSet)
 api_router.register(r'categories', api_views.CategoryViewSet)
 api_router.register(r'products', api_views.ProductViewSet)
-api_router.register(r'orders', api_views.OrderViewSet)
-api_router.register(r'order-items', api_views.OrderItemViewSet)
-api_router.register(r'messages', api_views.MessageViewSet)
-api_router.register(r'pix-payments', api_views.PixPaymentViewSet)
-api_router.register(r'jwts', api_views.JWTViewSet)
+#api_router.register(r'orders', api_views.OrderViewSet)
+#api_router.register(r'order-items', api_views.OrderItemViewSet)
+#api_router.register(r'messages', api_views.MessageViewSet)
+
 
 urlpatterns = [
     # Template-based views
@@ -30,7 +31,11 @@ urlpatterns = [
     path('clients/', views.clients_list, name='clients'),
     path('messages/', views.messages_list, name='messages'),
     path('orders/', views.orders_list, name='orders'),
+
     path('payment/', views.payment_page, name='payment'),
+    path('payment/<int:pix_id>/delete/', views.delete_pix_payment, name='delete_pix_payment'),
+
+    path('products/', views.products, name='products'),
     path('transmission/', views.transmission, name='transmission'),
     
     path('users/', views.users_list, name='users'),
@@ -50,4 +55,13 @@ urlpatterns = [
 
     # API routes
     path('api/', include(api_router.urls)),
-]
+    path('api/products/category/<int:category_id>/', api_views.ProductByCategoryView.as_view(), name='product-by-category'),
+    path('api/products/<int:id>/', api_views.ProductDetailView.as_view(), name='product-detail'),
+    path('api/clients/', api_views.ClientCreateView.as_view(), name='client-create'),
+    path('api/token/', obtain_auth_token, name='api_token_auth'),
+    path('api/orders/create/', api_views.OrderCreateView.as_view(), name='order-create'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# For serving static files in development
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django import forms
-from .models import User, Category, Product
+from .models import User, Category, Product, PixPayment
 
 User = get_user_model()
 
@@ -78,3 +78,7 @@ class ProductForm(forms.ModelForm):
         fields = ['image_url', 'name', 'description', 'category', 'price', 'is_active']
 
     
+class PixPaymentForm(forms.ModelForm):
+    class Meta:
+        model = PixPayment
+        fields = ['pix_key', 'description']

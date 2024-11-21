@@ -6,8 +6,10 @@ from django.http import HttpResponseForbidden
 from django.http import HttpResponse
 from django.contrib import messages
 from django.shortcuts import redirect
-from .forms import RegisterForm, EditUserForm, CategoryForm, ProductForm  
-from .models import User, Category, Client, Product
+from .forms import RegisterForm, EditUserForm, CategoryForm, ProductForm, PixPaymentForm  
+from .models import User, Category, Client, Product, PixPayment
+import requests
+from .utils import send_telegram_message
 
 @login_required
 def dashboard(request):
@@ -123,7 +125,41 @@ def orders_list(request):
 
 @login_required
 def payment_page(request):
-    return render(request, 'dashboard/payment.html')
+    if request.method == 'POST':
+        pix_key = request.POST.get('chave')
+        description = request.POST.get('description', '')
+
+        if not pix_key:
+            messages.error(request, 'Chave PIX é obrigatória.')
+            return redirect('payment')
+
+        # Create a new PixPayment object
+        pix_payment = PixPayment.objects.create(
+            pix_key=pix_key,
+            description=description
+        )
+
+        # Generate QR code
+        pix_payment.generate_qr_code()
+
+        messages.success(request, 'Chave PIX salva e QR Code gerado com sucesso.')
+        return redirect('payment')
+
+    # Fetch existing PIX payments for display
+    pix_payments = PixPayment.objects.all()
+    return render(request, 'dashboard/payment.html', {'pix_payments': pix_payments})
+
+def delete_pix_payment(request, pix_id):
+    # Ensure it's a POST request or proper confirmation
+    if request.method == "POST":
+        pix_payment = get_object_or_404(PixPayment, id=pix_id)
+        pix_payment.delete()
+        messages.success(request, "Chave PIX excluída com sucesso!")
+        return redirect('payment')  # Redirect to payment list page
+    else:
+        # Return a response or raise a 405 Method Not Allowed
+        messages.error(request, "Operação inválida.")
+        return redirect('payment')
 
 @login_required
 def products_list(request):
@@ -206,3 +242,32 @@ def delete_user(request, user_id):
         return redirect('users')
 
     return redirect('users')
+
+@login_required
+def transmission(request):
+    if request.method == 'POST':
+        message = request.POST.get('message')
+
+        if not message:
+            messages.error(request, 'A mensagem não pode estar vazia!')
+            return render(request, 'dashboard/transmission.html', {'text': message})
+
+        try:
+            chat_ids = Client.objects.values_list('chat_id', flat=True)
+            if not chat_ids:
+                messages.error(request, 'Não há chat_ids registrados no banco de dados.')
+                return render(request, 'dashboard/transmission.html', {'text': message})
+
+            errors = send_telegram_message(message, chat_ids)
+            if errors:
+                messages.error(request, f'Erro ao enviar mensagem: {errors}')
+                return render(request, 'dashboard/transmission.html', {'text': message})
+
+            messages.success(request, 'Mensagens enviadas com sucesso!')
+            return render(request, 'dashboard/transmission.html', {'text': message})
+
+        except Exception as e:
+            messages.error(request, f'Ocorreu um erro inesperado: {str(e)}')
+            return render(request, 'dashboard/transmission.html', {'text': message})
+
+    return render(request, 'dashboard/transmission.html')
