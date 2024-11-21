@@ -90,22 +90,20 @@ class OrderCreateView(generics.CreateAPIView):
     def perform_create(self, serializer):
         chat_id = self.request.data.get('client_chat_id')
         client = Client.objects.get(chat_id=chat_id)
-        serializer.save(client=client)  # Salva o pedido associado ao cliente
+        serializer.save(client=client)  
 
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
 
         try:
-            # Busca o último PixPayment criado
             pix_payment = PixPayment.objects.latest('created_at')
             
-            # Retorna o QR Code relacionado
             return Response({
                 "qr_code_url": pix_payment.qr_code_url,
                 "qr_code_image": pix_payment.qr_code_image.url if pix_payment.qr_code_image else None,
                 "description": pix_payment.description,
+                "pix_key": pix_payment.pix_key
             }, status=status.HTTP_201_CREATED)
         
         except PixPayment.DoesNotExist:
-            # Retorna uma resposta apropriada se não houver PixPayment
             raise NotFound(detail="Nenhum PixPayment foi encontrado.", code=404)
