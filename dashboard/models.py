@@ -36,6 +36,7 @@ class Client(models.Model):
     city = models.CharField(max_length=100, null=True)
     address = models.TextField(null=True)
     is_active = models.BooleanField(default=True, null=False)
+    is_deleted = models.BooleanField(default=False, null=False)
 
     def __str__(self):
         return self.name

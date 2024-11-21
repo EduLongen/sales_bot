@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.shortcuts import redirect
 from .forms import RegisterForm, EditUserForm, CategoryForm, ProductForm, PixPaymentForm  
-from .models import User, Category, Client, Product, PixPayment
+from .models import User, Category, Client, Product, PixPayment, Order, OrderItem
 import requests
 from .utils import send_telegram_message
 
@@ -98,7 +98,7 @@ def categories_list(request):
 
 @login_required
 def clients_list(request):
-    clients = Client.objects.all()
+    clients = Client.objects.filter(is_deleted=False)
     return render(request, 'dashboard/clients.html', {'clients': clients})
 
 @login_required
@@ -106,11 +106,14 @@ def delete_client(request, client_id):
     if not request.user.is_superuser:
         return HttpResponseForbidden("You are not allowed to delete clients.")
     
+    # Recupera o cliente, mesmo que não deletado
     client_to_delete = get_object_or_404(Client, id=client_id)
 
     if request.method == 'POST':
-        client_to_delete.delete()
-        messages.success(request, "Cliente deletado com sucesso.")
+        # Marca como deletado em vez de remover o registro
+        client_to_delete.is_deleted = True
+        client_to_delete.save()
+        messages.success(request, "Cliente marcado como deletado com sucesso.")
         return redirect('clients')
 
     return redirect('clients')
@@ -121,7 +124,9 @@ def messages_list(request):
 
 @login_required
 def orders_list(request):
-    return render(request, 'dashboard/orders.html')
+    orders = Order.objects.all()
+    orders_item = OrderItem.objects.all()
+    return render(request, 'dashboard/orders.html', {'orders': orders, 'orders_item': orders_item})
 
 @login_required
 def payment_page(request):

@@ -10,7 +10,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 api_router = DefaultRouter()
 api_router.register(r'clients', api_views.ClientViewSet)
 api_router.register(r'categories', api_views.CategoryViewSet)
-api_router.register(r'products', api_views.ProductViewSet)
+api_router.register(r'products', api_views.ProductViewSet, basename='product')
 #api_router.register(r'orders', api_views.OrderViewSet)
 #api_router.register(r'order-items', api_views.OrderItemViewSet)
 #api_router.register(r'messages', api_views.MessageViewSet)
