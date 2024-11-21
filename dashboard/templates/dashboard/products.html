@@ -100,6 +100,7 @@
           <table class="produto-table">
             <thead>
               <tr>
+                <th>Imagem</th>
                 <th>Nome</th>
                 <th>Categoria</th>
                 <th>Preço</th>
@@ -118,6 +119,7 @@
                 data-image-url="{{ product.image_url}}"
                 data-description="{{ product.description }}"
               >
+              <td><img src="{{ product.image_url }}" alt="{{ product.name }}" style="max-width: 100px; max-height: 100px;"/></td>
                 <td>{{ product.name }}</td>
                 <td>{{ product.category }}</td>
                 <td>{{ product.price }}</td>
