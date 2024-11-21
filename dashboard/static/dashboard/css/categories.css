@@ -392,28 +392,6 @@ button {
   font-size: 16px;
   color: var(--gray-600);
 }
-
-/* Responsive behavior */
-@media (max-width: 768px) {
-  .categoria-table {
-      font-size: 14px;
-  }
-
-  .pagination {
-      flex-direction: column;
-      gap: 8px;
-  }
-
-  .search-container {
-      flex-direction: column;
-      gap: 16px;
-  }
-
-  .search-bar {
-      width: 100%;
-  }
-}
-
 .logout-button {
   background: none;
   border: none;
@@ -437,6 +415,28 @@ button {
   background-color: var(--gray-600);
   color: var(--gray-25);
 }
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+  .categoria-table {
+      font-size: 14px;
+  }
+
+  .pagination {
+      flex-direction: column;
+      gap: 8px;
+  }
+
+  .search-container {
+      flex-direction: column;
+      gap: 16px;
+  }
+
+  .search-bar {
+      width: 100%;
+  }
+}
+
 
 /* Styling for the messages container */
 .messages-container {
@@ -496,67 +496,102 @@ button {
     max-width: 90%;
   }
 }
-
-
-/* Modal de edição */
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
   top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  z-index: 999;
+  display: none; /* Initially hidden */
+  justify-content: center;
+  align-items: center;
 }
 
-.modal-content {
-  background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
+/* Modal Styling */
+.modal {
+  width: 100%;
+  max-width: 420px;
+  background-color: var(--gray-0);
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Modal Header */
+.modal-header {
+  padding: 16px;
+  background-color: var(--gray-100);
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--gray-900);
+  text-align: center;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.modal-body {
+  background-color: var(--gray-0);
+  margin: auto;
   padding: 20px;
-  border: 1px solid #888;
-  width: 80%; /* Could be more or less, depending on screen size */
+  width: 80%;
+  max-width: 500px;
 }
 
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+  border-top: 1px solid var(--gray-200);
+}
+
+input[type="text"],
+select {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid var(--gray-300);
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+label {
+  margin-top: 12px;
   font-weight: bold;
 }
 
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
+.cancel-btn {
+  background-color: var(--error-50);
+  color: var(--error-600);
+  border: 1px solid var(--error-300);
+  padding: 10px 16px;
+  font-size: 16px;
+  border-radius: 6px;
+  width: 100%;
+  transition: background-color 0.3s ease;
 }
 
-.modal-btn {
-  background-color: #4CAF50; /* Green */
-  color: white;
-  padding: 15px 20px;
-  border: none;
-  cursor: pointer;
+.cancel-btn:hover {
+  background-color: var(--error-100);
+  color: var(--error-700);
 }
 
-.modal-btn:hover {
-  background-color: #45a049;
+.confirm-btn {
+  background-color: var(--success-600);
+  color: var(--gray-0);
+  border: 1px solid var(--success-700);
+  padding: 10px 16px;
+  font-size: 16px;
+  border-radius: 6px;
+  width: 100%;
+  transition: background-color 0.3s ease;
 }
 
-.modal-buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.modal-btn.cancel {
-  background-color: #6c757d;
-}
-
-.modal-btn.cancel:hover {
-  background-color: #5a6268;
+.confirm-btn:hover {
+  background-color: var(--success-500);
 }

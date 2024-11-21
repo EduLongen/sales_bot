@@ -6,11 +6,10 @@ from django.http import HttpResponseForbidden
 from django.http import HttpResponse
 from django.contrib import messages
 from django.shortcuts import redirect
-from .forms import RegisterForm, EditUserForm, CategoryForm, PixPaymentForm  
-from .models import User, Category, Client, PixPayment, Order, OrderItem
+from .forms import RegisterForm, EditUserForm, CategoryForm, ProductForm, PixPaymentForm  
+from .models import User, Category, Client, Product, PixPayment, Order, OrderItem
 import requests
 from .utils import send_telegram_message
-
 
 @login_required
 def dashboard(request):
@@ -53,7 +52,40 @@ def add_message(request):
 
 @login_required
 def add_product(request):
-    return render(request, 'dashboard/add_product.html')
+    if request.method == 'POST':
+        form = ProductForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Produto adicionado com sucesso!')
+            return redirect('products')
+    else:
+        form = ProductForm()
+    return render(request, 'dashboard/add_product.html', {'form': form})
+
+@login_required
+def edit_product(request, id):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("You are not allowed to edit products.")
+    
+    product = get_object_or_404(Product, pk=id)
+    categories = Category.objects.filter(is_active=True)
+    
+    if request.method == 'POST':
+        form = ProductForm(request.POST, instance=product)
+        print(form.errors)
+        print(form.cleaned_data)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Produto atualizado com sucesso.")
+            return redirect('products')
+    else:
+        form = ProductForm(instance=product)
+    
+    return render(request, 'dashboard/products.html', {
+        'form': form, 
+        'product': product
+    })
+
 
 @login_required
 def add_user(request):
@@ -135,8 +167,10 @@ def delete_pix_payment(request, pix_id):
         return redirect('payment')
 
 @login_required
-def products(request):
-    return render(request, 'dashboard/products.html')
+def products_list(request):
+    products = Product.objects.all()
+    categories = Category.objects.filter(is_active=True) 
+    return render(request, 'dashboard/products.html', {'products': products, 'categories': categories}) 
 
 @login_required
 def transmission(request):

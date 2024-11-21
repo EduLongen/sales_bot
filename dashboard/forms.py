@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django import forms
-from .models import User, Category, PixPayment
+from .models import User, Category, Product, PixPayment
 
 User = get_user_model()
 
@@ -64,6 +64,26 @@ class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
         fields = ['name', 'is_active']
+
+
+class ProductForm(forms.ModelForm):
+    is_active = forms.BooleanField(
+        label='Ativo',
+        required=False,
+        initial=True,
+        widget=forms.CheckboxInput(attrs={'style': 'display: inline-block; width: auto; margin-right: 10px; vertical-align: middle;'})
+    )
+    class Meta:
+        model = Product
+        fields = ['image_url', 'name', 'description', 'category', 'price', 'is_active']
+        labels = {
+            'image_url': 'Imagem',
+            'name': 'Nome',
+            'description': 'Descrição',
+            'category': 'Categoria',
+            'price': 'Preço',
+        }
+    
 class PixPaymentForm(forms.ModelForm):
     class Meta:
         model = PixPayment

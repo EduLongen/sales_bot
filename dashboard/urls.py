@@ -25,7 +25,9 @@ urlpatterns = [
     path('add_product/', views.add_product, name='add_product'),
     path('add_user/', views.add_user, name='add_user'),
     path('categories/', views.categories_list, name='categories'),
-    path('dashboard/categories/edit/<int:id>/', views.edit_category, name='edit_category'),
+    path('categories/edit/<int:id>/', views.edit_category, name='edit_category'),
+    path('products/', views.products_list, name='products'),
+    path('products/edit/<int:id>/', views.edit_product, name='edit_product'),
     path('clients/', views.clients_list, name='clients'),
     path('messages/', views.messages_list, name='messages'),
     path('orders/', views.orders_list, name='orders'),
@@ -33,7 +35,7 @@ urlpatterns = [
     path('payment/', views.payment_page, name='payment'),
     path('payment/<int:pix_id>/delete/', views.delete_pix_payment, name='delete_pix_payment'),
 
-    path('products/', views.products, name='products'),
+    path('products/', views.products_list, name='products'),
     path('transmission/', views.transmission, name='transmission'),
     
     path('users/', views.users_list, name='users'),
