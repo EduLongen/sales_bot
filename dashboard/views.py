@@ -7,10 +7,9 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.shortcuts import redirect
 from .forms import RegisterForm, EditUserForm, CategoryForm, PixPaymentForm  
-from .models import User, Category, Client, PixPayment
+from .models import User, Category, Client, PixPayment, Order, OrderItem
 import requests
 from .utils import send_telegram_message
-
 
 
 @login_required
@@ -90,7 +89,9 @@ def messages_list(request):
 
 @login_required
 def orders_list(request):
-    return render(request, 'dashboard/orders.html')
+    orders = Order.objects.all()
+    orders_item = OrderItem.objects.all()
+    return render(request, 'dashboard/orders.html', {'orders': orders, 'orders_item': orders_item})
 
 @login_required
 def payment_page(request):
