@@ -1,6 +1,7 @@
 import qrcode
 from io import BytesIO
 import requests
+import os
 
 def calculate_crc(data):
     crc = 0xFFFF
@@ -46,7 +47,10 @@ def generate_pix_qr_code(pix_payment):
     return buffer
 
 def send_telegram_message(message, chat_ids):
-    bot_token = '7503537602:AAEYJn9c0ePpu_hQiVxXnMeMF260-kYVbxs'
+    bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
+    if not bot_token:
+        raise ValueError("Bot token not found. Please set the TELEGRAM_BOT_TOKEN environment variable.")
+    
     url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
     errors = []
 
@@ -56,7 +60,7 @@ def send_telegram_message(message, chat_ids):
             'text': message
         }
         try:
-            response = requests.post(url, json=data)  # Certifique-se de usar json aqui
+            response = requests.post(url, json=data)
             print(f"Resposta do Telegram: {response.status_code}, {response.text}")
         except requests.exceptions.RequestException as e:
             print(f"Erro de conexão: {e}")
