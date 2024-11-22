@@ -125,8 +125,20 @@ def messages_list(request):
 @login_required
 def orders_list(request):
     orders = Order.objects.all()
-    orders_item = OrderItem.objects.all()
-    return render(request, 'dashboard/orders.html', {'orders': orders, 'orders_item': orders_item})
+    orders_items = OrderItem.objects.all()
+    
+    orders_with_items = []
+    for order in orders:
+        items = orders_items.filter(order_id=order.id)
+        orders_with_items.append({
+            'order': order,
+            'items': items,
+        })
+
+    context = {
+        'orders_with_items': orders_with_items,
+    }
+    return render(request, 'dashboard/orders.html', context)
 
 @login_required
 def payment_page(request):

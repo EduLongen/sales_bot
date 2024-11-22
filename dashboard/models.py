@@ -1,9 +1,9 @@
 from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.core.files import File
-from io import BytesIO
 from django.utils.text import slugify
-import qrcode
+from decimal import Decimal
 
 class User(AbstractUser):
     ROLE_CHOICES = [
@@ -62,23 +62,58 @@ class Product(models.Model):
         return self.name
 
 
+from django.db import models
+from decimal import Decimal
+from django.core.validators import MinValueValidator
+
 class Order(models.Model):
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True)  # Default removed, handle client manually
+    STATUS_CHOICES = [
+        ('AwaitingPayment', 'Aguardando Pagamento'),
+        ('Processing', 'Em processamento'),
+        ('Shipped', 'Encaminhado'),
+        ('Delivered', 'Entregue'),
+        ('Cancelled', 'Cancelado')
+    ]
+    
+    client = models.ForeignKey(
+        Client, 
+        on_delete=models.PROTECT,
+        null=True
+    )
     status = models.CharField(
         max_length=20,
-        choices=[
-            ('Pending', 'Pending'),
-            ('Processing', 'Processing'),
-            ('Shipped', 'Shipped'),
-            ('Delivered', 'Delivered'),
-            ('Cancelled', 'Cancelled')
-        ],
-        default='Pending'
+        choices=STATUS_CHOICES,
+        default='AwaitingPayment'
     )
-    total = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    total = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        default=0.00,
+        validators=[MinValueValidator(Decimal('0.01'))]
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    @property
+    def status_display(self):
+        return dict(self.STATUS_CHOICES).get(self.status, self.status)
+
+    def to_dict(self):
+        """Retorna um dicionário com os dados do pedido"""
+        return {
+            'id': self.id,
+            'total': self.total,
+            'status': self.status,
+            'status_display': self.status_display,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at
+        }
+
+    class Meta:
+        ordering = ['-created_at']
+        
+    def __str__(self):
+        return f"Pedido #{self.id} - {self.client.name if self.client else 'Sem cliente'}"
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
