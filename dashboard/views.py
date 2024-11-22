@@ -1,14 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import update_session_auth_hash
 from django.http import HttpResponseForbidden
-from django.http import HttpResponse
 from django.contrib import messages
 from django.shortcuts import redirect
-from .forms import RegisterForm, EditUserForm, CategoryForm, ProductForm, PixPaymentForm  
+from .forms import RegisterForm, EditUserForm, CategoryForm, ProductForm  
 from .models import User, Category, Client, Product, PixPayment, Order, OrderItem
-import requests
 from .utils import send_telegram_message
 
 @login_required
