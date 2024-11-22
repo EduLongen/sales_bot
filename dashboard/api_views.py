@@ -1,16 +1,16 @@
-from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework import filters
 from .models import Product, Category, Client, Order, PixPayment
 from .serializers import  OrderSerializer, ProductSerializer, CategorySerializer, ClientSerializer
-from rest_framework import generics
 from .models import Product
 from .serializers import ProductSerializer
-from rest_framework.decorators import api_view
+from rest_framework.exceptions import ValidationError
+from django.db import transaction
+from decimal import Decimal
 
 
 class BlockAllAccess(permissions.BasePermission):
@@ -65,6 +65,18 @@ class ClientViewSet(viewsets.ModelViewSet):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
 
+    @action(detail=False, methods=['get'], permission_classes=[AllowAny])
+    def all_clients(self, request):
+        clients = Client.objects.filter(is_active=True)
+        serializer = self.get_serializer(clients, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'], url_path='chat/(?P<chat_id>[^/.]+)', permission_classes=[AllowAny])
+    def get_by_chat_id(self, request, chat_id=None):
+        client = get_object_or_404(Client, chat_id=chat_id)
+        serializer = self.get_serializer(client)
+        return Response(serializer.data)
+
     @action(detail=False, methods=['get'], url_path='last-order/(?P<chat_id>[^/.]+)', permission_classes=[AllowAny])
     def last_order(self, request, chat_id=None):
         # Busca o cliente pelo chat_id
@@ -87,23 +99,68 @@ class OrderCreateView(generics.CreateAPIView):
     serializer_class = OrderSerializer
     permission_classes = [AllowAny]
 
-    def perform_create(self, serializer):
-        chat_id = self.request.data.get('client_chat_id')
-        client = Client.objects.get(chat_id=chat_id)
-        serializer.save(client=client)  
-
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-
+    def validate_client(self, chat_id):
         try:
-            pix_payment = PixPayment.objects.latest('created_at')
-            
-            return Response({
-                "qr_code_url": pix_payment.qr_code_url,
-                "qr_code_image": pix_payment.qr_code_image.url if pix_payment.qr_code_image else None,
-                "description": pix_payment.description,
-                "pix_key": pix_payment.pix_key
-            }, status=status.HTTP_201_CREATED)
+            return Client.objects.get(chat_id=chat_id)
+        except Client.DoesNotExist:
+            raise ValidationError({
+                "client_chat_id": "Cliente não encontrado com este chat_id."
+            })
+
+    def validate_total(self, order_items):
+        """Valida e calcula o total do pedido baseado nos items"""
+        if not order_items:
+            raise ValidationError({"items": "O pedido deve conter pelo menos um item."})
         
-        except PixPayment.DoesNotExist:
-            raise NotFound(detail="Nenhum PixPayment foi encontrado.", code=404)
+        calculated_total = Decimal('0.00')
+        for item in order_items:
+            quantity = Decimal(str(item.get('quantity', 0)))
+            price = Decimal(str(item.get('price', 0)))
+            if quantity <= 0:
+                raise ValidationError({"quantity": "A quantidade deve ser maior que zero."})
+            if price <= 0:
+                raise ValidationError({"price": "O preço deve ser maior que zero."})
+            calculated_total += quantity * price
+        
+        return calculated_total
+
+    @transaction.atomic
+    def create(self, request, *args, **kwargs):
+        try:
+            # Validar cliente
+            chat_id = request.data.get('client_chat_id')
+            client = self.validate_client(chat_id)
+
+            # Validar e calcular total
+            order_items = request.data.get('items', [])
+            calculated_total = self.validate_total(order_items)
+
+            # Criar pedido com transaction para garantir atomicidade
+            serializer = self.get_serializer(data={
+                **request.data,
+                'total': calculated_total,
+                'status': 'AwaitingPayment'
+            })
+            serializer.is_valid(raise_exception=True)
+            order = serializer.save(client=client)
+
+            # Criar o pagamento Pix
+            pix_payment = PixPayment.objects.latest('created_at')
+
+            return Response({
+                "order_id": order.id,
+                "qr_code_url": pix_payment.qr_code_url,
+                "pix_key": pix_payment.pix_key,
+                "description": pix_payment.description,
+            }, status=status.HTTP_201_CREATED)
+
+        except ValidationError as e:
+            return Response(e.detail, status=status.HTTP_400_BAD_REQUEST)
+        
+        except Exception as e:
+            # Log the error for debugging
+            import logging
+            logging.error(f"Error creating order: {str(e)}")
+            return Response({
+                "detail": "Erro ao processar o pedido. Por favor, tente novamente."
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

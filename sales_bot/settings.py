@@ -26,7 +26,15 @@ SECRET_KEY = 'django-insecure-b*ylh5-j#b_izegx54c9-9gwp1(kpf3c_(y(&a(c)#tj&b=5yc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '.ngrok-free.app',
+    'api.telegram.org',
+    't.me',
+    'telegram.me',
+    'telegram.org'
+]
 
 
 LOGIN_REDIRECT_URL = '/dashboard/'
