@@ -30,51 +30,63 @@ Ensure you have the following installed:
 - **Django 4.x**
 - **Git**
 
-### Installation
+### Instalação
 
-1. Clone the repository:
+1. Clone o repositório:
    ```bash
    git clone git@github.com:EduLongen/sales_bot.git
    ```
 
-2. Navigate into the project directory:
+2. Navegue até o diretório do projeto:
 
    ```bash
    cd sales_bot
    ```
 
-3. Set up a virtual environment and activate it:
+3. Configure um ambiente virtual e ative-o:
 
    ```bash
    python -m venv venv
-   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+   source venv/bin/activate  # No Windows use `venv\Scripts\activate`
    ```
 
-4. Install the required dependencies:
+4. Instale as dependências necessárias:
 
    ```bash
    pip install -r requirements.txt
    ```
 
-5. Create the database:
+5. Crie o banco de dados:
 
    ```bash
    CREATE DATABASE sales_bot_db;
    ```
 
-6. Apply migrations to set up the database:
+6. Aplique as migrações para configurar o banco de dados:
 
    ```bash
    python manage.py migrate
    ```
 
-7. Run the development server:
+7. Configure o arquivo `.env`:
+
+   Crie um arquivo `.env` na raiz do projeto
+   ```bash
+   cp .env.example .env
+   ```
+
+   Edite a variável de ambiente do Telegram:
+   ```env
+   TELEGRAM_BOT_TOKEN= # Seu Token do Bot do Telegram
+   ```
+
+8. Execute o servidor de desenvolvimento:
 
    ```bash
    python manage.py runserver
    ```
 
-8. Access the application at http://127.0.0.1:8000/
+9. Acesse a aplicação em http://127.0.0.1:8000/
 
 ### File Structure
 - **dashboard/**: Contains all views, URLs, templates, and static files (CSS, JS).*
@@ -91,10 +103,10 @@ Ensure you have the following installed:
 ### Deployment
 - To deploy the project, configure the necessary database settings and environment variables. Use services like Heroku or Vercel to host the Django backend.
 
-### Contributing
-
-1. Fork the project.
-2. Create a feature branch (git checkout -b feature/AmazingFeature).
-3. Commit your changes (git commit -m 'Add some amazing feature').
-4. Push to the branch (git push origin feature/AmazingFeature).
-5. Open a Pull Request.
+### Team
+ - Daniel Hartmann
+ - Eduardo Corrêa
+ - Gabriel Costa
+ - Lucas Dreveck
+ - Mayumi Bogoni
+ - Paola Silva
