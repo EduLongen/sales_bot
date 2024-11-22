@@ -7,6 +7,7 @@
   <title>Usuários</title>
   {% load static %}
   <link rel="stylesheet" href="{% static 'dashboard/css/users.css' %}">
+  <script src="{% static 'dashboard/js/users.js' %}"></script>
 </head>
 
 <body>
@@ -46,11 +47,6 @@
             <span>📡</span> Transmissão
           </a>
         </li>
-        <li class="menu-item">
-          <a href="{% url 'messages' %}" class="menu-link">
-            <span>✉️</span> Mensagens
-          </a>
-        </li>
         <li class="menu-item active">
           <a href="{% url 'users' %}" class="menu-link">
             <span>👤</span> Usuários
@@ -61,6 +57,14 @@
             <span>💳</span> Pagamento
           </a>
         </li>
+        <li class="menu-item">
+          <form action="{% url 'logout' %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="menu-link logout-button">
+              <span>⬅️</span> Logout
+            </button>
+          </form>
+        </li>
       </ul>
     </aside>
 
@@ -70,44 +74,77 @@
         <p>Gerencie os usuários da sua plataforma.</p>
       </header>
 
-      <!-- Search bar with add button -->
-      <section class="table-container">
-        <div class="search-container">
-          <input type="text" class="search-bar" placeholder="🔍 Buscar usuário">
-          <a href="{% url 'add_user' %}" class="add-user-btn">Adicionar Usuário</a>
-        </div>
+      {% if messages %}
+      <div class="messages-container">
+        <ul class="messages">
+          {% for message in messages %}
+          <li class="{{ message.tags }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
 
-        <table class="usuario-table">
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Username</th>
-              <th>Cargo</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Eduardo Longen Corrêa</td>
-              <td>Eduardo</td>
-              <td>Administrador</td>
-              <td>
-                <button class="edit-btn">✏️</button>
-                <button class="delete-btn">🗑️</button>
-              </td>
-            </tr>
-            <!-- Repeat other user entries as needed -->
-          </tbody>
-        </table>
+      <!-- Table for users -->
+      <table class="usuario-table">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Sobrenome</th>
+            <th>Email</th>
+            <th>Cargo</th>
+            {% if user.is_superuser %}
+            <th>Ações</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in users %}
+          <tr>
+            <td>{{ user.first_name }}</td>
+            <td>{{ user.last_name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.role|default:"" }}</td>
+            {% if request.user.is_superuser %}
+            <td>
+              <a href="{% url 'edit_user' user.id %}" class="edit-link">✏️</a>
+              <button class="delete-btn" data-user-id="{{ user.id }}"
+                data-action-url="{% url 'delete_user' user.id %}">🗑️</button>
+            </td>
+            {% endif %}
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5">Nenhum usuário encontrado.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
 
-        <div class="pagination">
-          <button class="pagination-btn">Anterior</button>
-          <span class="page-indicator">Página 1 de 10</span>
-          <button class="pagination-btn">Próxima</button>
-        </div>
-      </section>
+      <div class="pagination">
+        <button class="pagination-btn">Anterior</button>
+        <span class="page-indicator">Página 1 de 10</span>
+        <button class="pagination-btn">Próxima</button>
+      </div>
     </main>
   </div>
+
+  <!-- Modal Structure -->
+  <div class="modal-overlay" id="deleteModal" style="display: none;">
+    <div class="modal">
+      <div class="modal-header">Confirmação de Exclusão</div>
+      <div class="modal-content">
+        <p>Tem certeza de que deseja excluir este usuário?<br>Esta ação não pode ser desfeita.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="cancel-btn">Cancelar</button>
+        <form id="deleteForm" method="post">
+          {% csrf_token %}
+          <button type="submit" class="confirm-btn">Confirmar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
 </body>
 
 </html>

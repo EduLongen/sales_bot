@@ -1,25 +1,45 @@
-// Get the modal element
-const paymentModal = document.getElementById('paymentModal');
-const closePaymentModal = document.getElementById('closePaymentModal');
+// Get modal and buttons
+const deleteModal = document.getElementById('deleteModal');
+const confirmDeleteButton = document.getElementById('confirmDelete');
+const cancelDeleteButton = document.getElementById('cancelDelete');
 
-// Function to show the modal
-function showPaymentModal() {
-  paymentModal.style.display = 'flex';
+// Function to show the delete modal
+function showDeleteModal(formElement) {
+  deleteModal.style.display = 'flex';
+
+  confirmDeleteButton.onclick = function () {
+    formElement.submit(); // Submit the form with POST method
+  };
 }
 
-// Function to hide the modal and redirect
-function hidePaymentModalAndRedirect() {
-  paymentModal.style.display = 'none';
-  window.location.href = 'payment.html';
+// Function to hide the delete modal
+function hideDeleteModal() {
+  deleteModal.style.display = 'none';
 }
 
-// Handle "Adicionar Produto" button click
-document.querySelector('.submit-btn').addEventListener('click', function(event) {
-  event.preventDefault(); 
-  showPaymentModal();
+// Attach event listeners to delete buttons
+document.querySelectorAll('.delete-btn').forEach(function (button) {
+  button.addEventListener('click', function (event) {
+    event.preventDefault(); // Prevent default button action
+    const formElement = this.closest('form'); // Get the form element
+    showDeleteModal(formElement); // Pass the form element to the modal
+  });
 });
 
-// Handle modal "OK" button click
-closePaymentModal.addEventListener('click', function() {
-  hidePaymentModalAndRedirect();
+// Cancel button hides the modal
+cancelDeleteButton.addEventListener('click', hideDeleteModal);
+
+// Close modal on outside click
+deleteModal.addEventListener('click', function (event) {
+  if (event.target === deleteModal) hideDeleteModal();
+});
+
+// Messages Timer: Hide messages after 5 seconds
+document.addEventListener('DOMContentLoaded', function () {
+  const messagesContainer = document.querySelector('.messages-container');
+  if (messagesContainer) {
+    setTimeout(() => {
+      messagesContainer.style.display = 'none';
+    }, 5000);
+  }
 });

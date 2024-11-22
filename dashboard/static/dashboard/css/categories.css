@@ -358,12 +358,12 @@ button {
   transition: background-color 0.3s ease;
 }
 
-.edit-btn, .delete-btn {
+.edit-btn{
   background-color: var(--gray-0);
   color: var(--gray-900);
 }
 
-.edit-btn:hover, .delete-btn:hover {
+.edit-btn:hover{
   background-color: var(--gray-100);
 }
 
@@ -392,6 +392,29 @@ button {
   font-size: 16px;
   color: var(--gray-600);
 }
+.logout-button {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+}
+
+.logout-button:hover {
+  background-color: var(--gray-200);
+  transition: background-color 0.4s ease;
+  color: var(--gray-900);
+}
+
+.menu-item.active .logout-button {
+  background-color: var(--gray-600);
+  color: var(--gray-25);
+}
 
 /* Responsive behavior */
 @media (max-width: 768px) {
@@ -412,4 +435,163 @@ button {
   .search-bar {
       width: 100%;
   }
+}
+
+
+/* Styling for the messages container */
+.messages-container {
+  position: absolute;
+  top: 20px; /* Ensures it's near the top of the page */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 400px; /* Matches form width */
+  text-align: center;
+  z-index: 1000; /* Ensures it's on top of other elements */
+}
+
+.messages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.messages li {
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  font-size: 16px;
+  color: var(--success-700);
+  border: 1px solid var(--success-400);
+  width: 100%;
+}
+
+/* Specific styles based on message types */
+.messages li.success {
+  background-color: var(--success-100);
+  color: var(--success-700);
+  border: 1px solid var(--success-400);
+}
+
+.messages li.error {
+  background-color: var(--error-100);
+  color: var(--error-700);
+  border: 1px solid var(--error-400);
+}
+
+.messages li.info {
+  background-color: var(--blue-100);
+  color: var(--blue-700);
+  border: 1px solid var(--blue-400);
+}
+
+.messages li.warning {
+  background-color: var(--warning-100);
+  color: var(--warning-700);
+  border: 1px solid var(--warning-400);
+}
+
+@media (max-width: 768px) {
+  .messages-container {
+    max-width: 90%;
+  }
+}
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  z-index: 999;
+  display: none; /* Initially hidden */
+  justify-content: center;
+  align-items: center;
+}
+
+/* Modal Styling */
+.modal {
+  width: 100%;
+  max-width: 420px;
+  background-color: var(--gray-0);
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Modal Header */
+.modal-header {
+  padding: 16px;
+  background-color: var(--gray-100);
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--gray-900);
+  text-align: center;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.modal-body {
+  background-color: var(--gray-0);
+  margin: auto;
+  padding: 20px;
+  width: 80%;
+  max-width: 500px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+  border-top: 1px solid var(--gray-200);
+}
+
+input[type="text"],
+select {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid var(--gray-300);
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+label {
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+.cancel-btn {
+  background-color: var(--error-50);
+  color: var(--error-600);
+  border: 1px solid var(--error-300);
+  padding: 10px 16px;
+  font-size: 16px;
+  border-radius: 6px;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.cancel-btn:hover {
+  background-color: var(--error-100);
+  color: var(--error-700);
+}
+
+.confirm-btn {
+  background-color: var(--success-600);
+  color: var(--gray-0);
+  border: 1px solid var(--success-700);
+  padding: 10px 16px;
+  font-size: 16px;
+  border-radius: 6px;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.confirm-btn:hover {
+  background-color: var(--success-500);
 }

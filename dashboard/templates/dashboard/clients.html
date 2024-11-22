@@ -7,6 +7,7 @@
   <title>Clientes</title>
   {% load static %}
   <link rel="stylesheet" href="{% static 'dashboard/css/clients.css' %}">
+  <script src="{% static 'dashboard/js/clients.js' %}"></script>
 </head>
 
 <body>
@@ -47,11 +48,6 @@
           </a>
         </li>
         <li class="menu-item">
-          <a href="{% url 'messages' %}" class="menu-link">
-            <span>✉️</span> Mensagens
-          </a>
-        </li>
-        <li class="menu-item">
           <a href="{% url 'users' %}" class="menu-link">
             <span>👤</span> Usuários
           </a>
@@ -60,6 +56,14 @@
           <a href="{% url 'payment' %}" class="menu-link">
             <span>💳</span> Pagamento
           </a>
+        </li>
+        <li class="menu-item">
+          <form action="{% url 'logout' %}" method="post" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="menu-link logout-button">
+                  <span>⬅️</span> Logout
+              </button>
+          </form>
         </li>
       </ul>
     </aside>
@@ -71,8 +75,6 @@
       </header>
 
       <section class="table-container">
-        <input type="text" class="search-bar" placeholder="🔍 Buscar cliente">
-
         <table class="client-table">
           <thead>
             <tr>
@@ -81,34 +83,55 @@
               <th>Cidade</th>
               <th>Endereço</th>
               <th>Ativo</th>
+              {% if user.is_superuser %}
               <th>Ações</th>
+              {% endif %}
             </tr>
           </thead>
           <tbody>
-            <!-- Example rows (you can replace this with dynamic content later) -->
+            {% for client in clients %}
             <tr>
-              <td>Eduardo Longen Corrêa</td>
-              <td>(45) 99950-1020</td>
-              <td>Toledo</td>
-              <td>Ap. 20, Rua Guarani, 725, Centro, Toledo, Paraná</td>
-              <td>Ativo</td>
+              <td>{{ client.name }}</td>
+              <td>{{ client.phone_number }}</td>
+              <td>{{ client.city }}</td>
+              <td>{{ client.address }}</td>
+              <td>{{ client.is_active }}</td>
+              {% if request.user.is_superuser %}
               <td>
-                <button class="edit-btn">✏️</button>
-                <button class="delete-btn">🗑️</button>
+                <button class="delete-btn" data-client-id="{{ client.id }}"
+                  data-action-url="{% url 'delete_client' client.id %}">🗑️</button>
               </td>
+              {% endif %}
             </tr>
-            <!-- Additional rows... -->
+            {% empty %}
+            <tr>
+              <td colspan="5">Nenhum cliente encontrado.</td>
+            </tr>
+            {% endfor %}
           </tbody>
         </table>
 
-        <div class="pagination">
-          <button class="pagination-btn">Anterior</button>
-          <span class="page-indicator">Página 1 de 10</span>
-          <button class="pagination-btn">Próxima</button>
-        </div>
       </section>
     </main>
   </div>
+
+  <!-- Modal Structure -->
+  <div class="modal-overlay" id="deleteModal" style="display: none;">
+    <div class="modal">
+      <div class="modal-header">Confirmação de Exclusão</div>
+      <div class="modal-content">
+        <p>Tem certeza de que deseja excluir este cliente?<br>Esta ação não pode ser desfeita.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="cancel-btn">Cancelar</button>
+        <form id="deleteForm" method="post">
+          {% csrf_token %}
+          <button type="submit" class="confirm-btn">Confirmar</button>
+        </form>
+      </div>
+    </div>
+  </div> 
+
 </body>
 
 </html>

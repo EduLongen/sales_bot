@@ -25,3 +25,13 @@ document.querySelector('.product-form').addEventListener('submit', function(even
 closeProductModal.addEventListener('click', function() {
   hideProductModalAndRedirect();
 });
+
+// Messages Timer: Hide messages after 5 seconds
+document.addEventListener('DOMContentLoaded', function () {
+  const messagesContainer = document.querySelector('.messages-container');
+  if (messagesContainer) {
+    setTimeout(() => {
+      messagesContainer.style.display = 'none';
+    }, 5000);
+  }
+});

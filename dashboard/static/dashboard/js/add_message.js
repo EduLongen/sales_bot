@@ -1,25 +1,25 @@
-// Get the modal element
+// Get the message modal elements
 const messageModal = document.getElementById('messageModal');
 const closeMessageModal = document.getElementById('closeMessageModal');
 
-// Function to show the modal
+// Function to show the message modal
 function showMessageModal() {
   messageModal.style.display = 'flex';
 }
 
-// Function to hide the modal and redirect
+// Function to hide the message modal and redirect to the messages page
 function hideMessageModalAndRedirect() {
   messageModal.style.display = 'none';
-  window.location.href = 'messages.html';
+  window.location.href = '/dashboard/messages/';  // Corrected URL for messages page
 }
 
-// Handle "Adicionar Produto" button click
-document.querySelector('.submit-btn').addEventListener('click', function(event) {
+// Handle "Adicionar Mensagem" button click
+document.querySelector('.add-message-btn').addEventListener('click', function(event) {
   event.preventDefault(); 
   showMessageModal();
 });
 
-// Handle modal "OK" button click
+// Handle modal "OK" button click for message modal
 closeMessageModal.addEventListener('click', function() {
   hideMessageModalAndRedirect();
 });

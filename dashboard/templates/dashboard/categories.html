@@ -1,112 +1,146 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Categorias</title>
-  {% load static %}
-  <link rel="stylesheet" href="{% static 'dashboard/css/categories.css' %}">
-</head>
-
-<body>
-  <div class="dashboard-container">
-    <aside class="sidebar">
-      <div class="logo">
-        <h2>Dashboard</h2>
-      </div>
-      <ul class="menu">
-        <li class="menu-item">
-          <a href="{% url 'dashboard' %}" class="menu-link">
-            <span>⚡</span> Dashboard
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="{% url 'clients' %}" class="menu-link">
-            <span>👥</span> Clientes
-          </a>
-        </li>
-        <li class="menu-item active">
-          <a href="{% url 'categories' %}" class="menu-link">
-            <span>📦</span> Categorias
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="{% url 'products' %}" class="menu-link">
-            <span>🛒</span> Produtos
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="{% url 'orders' %}" class="menu-link">
-            <span>📑</span> Pedidos
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="{% url 'transmission' %}" class="menu-link">
-            <span>📡</span> Transmissão
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="{% url 'messages' %}" class="menu-link">
-            <span>✉️</span> Mensagens
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="{% url 'users' %}" class="menu-link">
-            <span>👤</span> Usuários
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="{% url 'payment' %}" class="menu-link">
-            <span>💳</span> Pagamento
-          </a>
-        </li>
-      </ul>
-    </aside>
-
-    <main class="main-content">
-      <header class="header">
-        <h1>Categorias</h1>
-        <p>Gerencie e organize suas categorias.</p>
-      </header>
-
-      <!-- Search bar with add button -->
-      <section class="table-container">
-        <div class="search-container">
-          <input type="text" class="search-bar" placeholder="🔍 Buscar categoria">
-          <a href="{% url 'add_category' %}" class="new-category-btn">Adicionar nova categoria</a>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Categorias</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'dashboard/css/categories.css' %}" />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <aside class="sidebar">
+        <div class="logo">
+          <h2>Dashboard</h2>
         </div>
+        <ul class="menu">
+          <li class="menu-item">
+            <a href="{% url 'dashboard' %}" class="menu-link">
+              <span>⚡</span> Dashboard
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'clients' %}" class="menu-link">
+              <span>👥</span> Clientes
+            </a>
+          </li>
+          <li class="menu-item active">
+            <a href="{% url 'categories' %}" class="menu-link">
+              <span>📦</span> Categorias
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'products' %}" class="menu-link">
+              <span>🛒</span> Produtos
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'orders' %}" class="menu-link">
+              <span>📑</span> Pedidos
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'transmission' %}" class="menu-link">
+              <span>📡</span> Transmissão
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'users' %}" class="menu-link">
+              <span>👤</span> Usuários
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="{% url 'payment' %}" class="menu-link">
+              <span>💳</span> Pagamento
+            </a>
+          </li>
+          <li class="menu-item">
+            <form
+              action="{% url 'logout' %}"
+              method="post"
+              style="display: inline"
+            >
+              {% csrf_token %}
+              <button type="submit" class="menu-link logout-button">
+                <span>⬅️</span> Logout
+              </button>
+            </form>
+          </li>
+        </ul>
+      </aside>
 
-        <table class="categoria-table">
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Ativo</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for category in categories %}
-            <tr>
-              <td>{{ category.name }}</td>
-              <td>{{ category.status }}</td>
-              <td>
-                <button class="edit-btn">✏️</button>
-                <button class="delete-btn">🗑️</button>
-              </td>
-            </tr>
+      <main class="main-content">
+        <header class="header">
+          <h1>Categorias</h1>
+          <p>Gerencie e organize suas categorias.</p>
+        </header>
+
+        {% if messages %}
+        <div class="messages-container">
+          <ul class="messages">
+            {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
             {% endfor %}
-          </tbody>
-        </table>
-
-        <div class="pagination">
-          <button class="pagination-btn">Anterior</button>
-          <span class="page-indicator">Página 1 de 10</span>
-          <button class="pagination-btn">Próxima</button>
+          </ul>
         </div>
-      </section>
-    </main>
-  </div>
-</body>
+        {% endif %}
 
+        <section class="table-container">
+          <div class="search-container">
+            <a href="{% url 'add_category' %}" class="new-category-btn"
+              >Adicionar nova categoria</a
+            >
+          </div>
+
+          <table class="categoria-table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Ativo</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for category in categories %}
+              <tr data-id="{{ category.id }}">
+                <td>{{ category.name }}</td>
+                <td>{% if category.is_active %}Sim{% else %}Não{% endif %}</td>
+                <td>
+                  <button class="edit-btn">✏️</button>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+
+    <div id="editCategoryModal" class="modal-overlay">
+      <div class="modal">
+        <div class="modal-header">Editar Categoria</div>
+        <div class="modal-body">
+          <form
+            id="editCategoryForm"
+            method="post"
+            action="{% url 'edit_category' id=0 %}"
+          >
+            {% csrf_token %}
+            <input type="hidden" name="id" id="editCategoryId" />
+            <label for="editCategoryName">Nome:</label>
+            <input type="text" id="editCategoryName" name="name" required />
+            <label for="editCategoryStatus">Ativo:</label>
+            <select id="editCategoryStatus" name="is_active" required>
+              <option value="True">Sim</option>
+              <option value="False">Não</option>
+            </select>
+            <div class="modal-footer">
+              <button type="button" class="cancel-btn">Cancelar</button>
+              <button type="submit" class="confirm-btn">Salvar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="{% static 'dashboard/js/categories.js' %}"></script>
+  </body>
 </html>

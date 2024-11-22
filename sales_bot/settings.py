@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,11 +26,23 @@ SECRET_KEY = 'django-insecure-b*ylh5-j#b_izegx54c9-9gwp1(kpf3c_(y(&a(c)#tj&b=5yc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '.ngrok-free.app',
+    'api.telegram.org',
+    't.me',
+    'telegram.me',
+    'telegram.org'
+]
 
 
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGIN_URL = '/login/'  # URL where Django sends unauthenticated users
+LOGOUT_REDIRECT_URL = '/login/'
+
+
+AUTH_USER_MODEL = 'dashboard.User'
 
 
 # Application definition
@@ -42,6 +55,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'dashboard',
+    'rest_framework',
+    'django_extensions',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -50,7 +66,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -84,7 +99,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'sales_bot_db',  # Your MySQL database name
         'USER': 'root',  # Your MySQL user (root by default)
-        'PASSWORD': 'TalathDirnen',  # Replace with your MySQL password
+        'PASSWORD': 'root',  # Replace with your MySQL password
         'HOST': 'localhost',     # Localhost if using MySQL locally
         'PORT': '3306',          # MySQL's default port
     }
@@ -109,6 +124,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
@@ -137,3 +157,16 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'debug',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'error',
+}
+
+import os
+
+MEDIA_URL = '/media/'  # This serves files at /media/ in URLs
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Files are stored here on disk

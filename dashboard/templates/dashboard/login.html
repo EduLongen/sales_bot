@@ -1,50 +1,55 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'dashboard/css/login.css' %}">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Login</title>
+	{% load static %}
+	<link rel="stylesheet" href="{% static 'dashboard/css/login.css' %}">
 </head>
+
 <body>
-    <div class="login-container">
-        <h2>Acesse a sua conta</h2>
-        <p>Bem vindo de volta! Entre com seus dados.</p>
 
-        <form method="post" action="{% url 'login' %}">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" name="username" id="username" placeholder="Insira seu username" required>
-            </div>
+	{% if messages %}
+	<div class="messages-container">
+		<ul class="messages">
+			{% for message in messages %}
+			<li class="{{ message.tags }}">{{ message }}</li>
+			{% endfor %}
+		</ul>
+	</div>
+	{% endif %}
 
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" name="password" id="password" placeholder="Insira sua senha" required>
-            </div>
+	<div class="login-container">
+		<h2>Acesse a sua conta</h2>
+		<p>Bem vindo de volta! Entre com seus dados.</p>
 
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" name="remember_me"> Manter conectado
-                </label>
-            </div>
+		<form method="post" action="{% url 'login' %}">
+			{% csrf_token %}
+			<div class="form-group">
+				<label for="username">Username</label>
+				<input type="text" name="username" id="username" placeholder="Insira seu username" required>
+			</div>
 
-            <button type="submit">Entrar</button>
-        </form>
+			<div class="form-group">
+				<label for="password">Password</label>
+				<input type="password" name="password" id="password" placeholder="Insira sua senha" required>
+			</div>
 
-        {% if form.errors %}
-            <div class="errors">
-                <ul>
-                {% for field in form %}
-                    {% for error in field.errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
+			<div class="form-group">
+				<label>
+					<input type="checkbox" name="remember_me"> Manter conectado
+				</label>
+			</div>
 
-    </div>
+			<button type="submit">Entrar</button>
+		</form>
+
+		<p class="register-link">Não tem uma conta? <a href="{% url 'register' %}" class="register-link-action">Registre-se
+				aqui</a></p>
+
+	</div>
 </body>
+
 </html>

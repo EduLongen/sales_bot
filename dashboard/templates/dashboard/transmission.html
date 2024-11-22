@@ -2,96 +2,99 @@
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transmissão</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'dashboard/css/transmission.css' %}">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Transmissão</title>
+	{% load static %}
+	<link rel="stylesheet" href="{% static 'dashboard/css/transmission.css' %}">
 </head>
 
 <body>
-    <div class="dashboard-container">
-        <aside class="sidebar">
-            <div class="logo">
-                <h2>Dashboard</h2>
-            </div>
-            <ul class="menu">
-                <li class="menu-item">
-                    <a href="{% url 'dashboard' %}" class="menu-link">
-                        <span>⚡</span> Dashboard
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="{% url 'clients' %}" class="menu-link">
-                        <span>👥</span> Clientes
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="{% url 'categories' %}" class="menu-link">
-                        <span>📦</span> Categorias
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="{% url 'products' %}" class="menu-link">
-                        <span>🛒</span> Produtos
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="{% url 'orders' %}" class="menu-link">
-                        <span>📑</span> Pedidos
-                    </a>
-                </li>
-                <li class="menu-item active">
-                    <a href="{% url 'transmission' %}" class="menu-link">
-                        <span>📡</span> Transmissão
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="{% url 'messages' %}" class="menu-link">
-                        <span>✉️</span> Mensagens
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="{% url 'users' %}" class="menu-link">
-                        <span>👤</span> Usuários
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="{% url 'payment' %}" class="menu-link">
-                        <span>💳</span> Pagamento
-                    </a>
-                </li>
-            </ul>
-        </aside>
+	<div class="dashboard-container">
+		<aside class="sidebar">
+			<div class="logo">
+				<h2>Dashboard</h2>
+			</div>
+			<ul class="menu">
+				<li class="menu-item">
+					<a href="{% url 'dashboard' %}" class="menu-link">
+						<span>⚡</span> Dashboard
+					</a>
+				</li>
+				<li class="menu-item">
+					<a href="{% url 'clients' %}" class="menu-link">
+						<span>👥</span> Clientes
+					</a>
+				</li>
+				<li class="menu-item">
+					<a href="{% url 'categories' %}" class="menu-link">
+						<span>📦</span> Categorias
+					</a>
+				</li>
+				<li class="menu-item">
+					<a href="{% url 'products' %}" class="menu-link">
+						<span>🛒</span> Produtos
+					</a>
+				</li>
+				<li class="menu-item">
+					<a href="{% url 'orders' %}" class="menu-link">
+						<span>📑</span> Pedidos
+					</a>
+				</li>
+				<li class="menu-item active">
+					<a href="{% url 'transmission' %}" class="menu-link">
+						<span>📡</span> Transmissão
+					</a>
+				</li>
+				<li class="menu-item">
+					<a href="{% url 'users' %}" class="menu-link">
+						<span>👤</span> Usuários
+					</a>
+				</li>
+				<li class="menu-item">
+					<a href="{% url 'payment' %}" class="menu-link">
+						<span>💳</span> Pagamento
+					</a>
+				</li>
+				<li class="menu-item">
+          <form action="{% url 'logout' %}" method="post" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="menu-link logout-button">
+                  <span>⬅️</span> Logout
+              </button>
+          </form>
+        </li>
+			</ul>
+		</aside>
 
-        <main class="main-content">
-            <header class="header">
-                <h1>Transmissão</h1>
-                <p>Envie uma mensagem para os seus clients.</p>
-            </header>
+		<main class="main-content">
+			<header class="header">
+				<h1>Transmissão</h1>
+				<p>Envie uma mensagem para os seus clientes.</p>
+			</header>
+			
+			{% if messages %}
+			<div class="messages-container">
+				<ul class="messages">
+					{% for message in messages %}
+						<li class="{{ message.tags }}">{{ message }}</li>
+					{% endfor %}
+				</ul>
+			</div>
+		{% endif %}
 
-            <form method="POST" action="{% url 'transmission' %}">
-                {% csrf_token %}
-                <section class="transmission-container">
-                    <textarea class="transmission-message" name="message" placeholder="Escreva sua mensagem..." required></textarea>
-                    <p class="alert-text">Atenção! Esta transmissão será enviada a todos os clientes da sua loja!</p>
-                    <button type="submit" class="send-btn">Enviar</button>
-                </section>
-            </form>            
-            
-        </main>
-    </div>
+		
+			<form method="POST" action="{% url 'transmission' %}">
+				{% csrf_token %}
+				<textarea name="message" class="transmission-message" placeholder="Escreva sua mensagem..." required>{{ text }}</textarea>
+				<button type="submit" class="send-btn">Enviar</button>
+			  </form>
+			  
+			
+		</main>
+		
+		
+		
+	</div>
 </body>
-
-<!-- Modal Structure -->
-<div id="transmissionModal" class="modal">
-    <div class="modal-content">
-        <h2>Transmissão enviada!</h2>
-        <p>A nova transmissão foi enviada com sucesso.</p>
-        <button id="closeTransmissionModal" class="modal-btn">OK</button>
-    </div>
-</div>
-
-<script src="{% static 'dashboard/js/transmission.js' %}"></script>
-
 </html>

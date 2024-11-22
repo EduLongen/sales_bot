@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Adicionar Produto</title>
   {% load static %}
-  <link rel="stylesheet" href="{% static 'dashboard/css/add_product.css' %}">
+  <link rel="stylesheet" href="{% static 'dashboard/css/add_product.css' %}" />
 </head>
+
 <body>
   <div class="dashboard-container">
     <aside class="sidebar">
@@ -45,11 +47,6 @@
           </a>
         </li>
         <li class="menu-item">
-          <a href="{% url 'messages' %}" class="menu-link">
-            <span>✉️</span> Mensagens
-          </a>
-        </li>
-        <li class="menu-item">
           <a href="{% url 'users' %}" class="menu-link">
             <span>👤</span> Usuários
           </a>
@@ -59,6 +56,14 @@
             <span>💳</span> Pagamento
           </a>
         </li>
+        <li class="menu-item">
+          <form action="{% url 'logout' %}" method="post" style="display: inline">
+            {% csrf_token %}
+            <button type="submit" class="menu-link logout-button">
+              <span>⬅️</span> Logout
+            </button>
+          </form>
+        </li>
       </ul>
     </aside>
 
@@ -67,62 +72,31 @@
         <h1>Adicionar novo produto</h1>
       </header>
 
-      <form class="product-form">
-        <div class="form-group">
-          <label for="nome">Nome:</label>
-          <input type="text" id="nome" placeholder="Adicione um nome" class="input-field">
-        </div>
+      {% if messages %}
+      <div class="messages-container">
+        <ul class="messages">
+          {% for message in messages %}
+          <li class="{{ message.tags }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
 
-        <div class="form-group">
-          <label for="descricao">Descrição:</label>
-          <textarea id="descricao" placeholder="Escreva sua descrição..." class="input-field textarea-field"></textarea>
-        </div>
+      <section class="form-container">
+        <form method="POST" action="{% url 'add_product' %}">
+          {% csrf_token %}
+          <div class="form-group">{{ form.as_p }}</div>
 
-        <div class="form-group">
-          <label for="categoria">Categoria:</label>
-          <select id="categoria" class="input-field">
-            <option>Categoria</option>
-            <option value="food">Food</option>
-            <option value="topping">Topping</option>
-            <!-- Add more categories as needed -->
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="imagem">Imagem:</label>
-          <div class="file-upload">
-            <span class="file-upload-icon">📤</span>
-            <span class="file-upload-text">
-              <a href="#">Clique para enviar</a> 
-              <span>ou arraste e solte</span>
-            </span>
-            <span class="file-upload-instructions">SVG, PNG ou JPG (max. 800×400px)</span>
-          </div>          
-        </div>
-
-        <div class="form-group">
-          <label for="preco">Preço:</label>
-          <input type="text" id="preco" placeholder="50,00" class="input-field">
-        </div>
-
-        <div class="form-actions">
-          <button type="submit" class="submit-btn">Adicionar Produto</button>
-          <a href="{% url 'products' %}" class="back-btn">Voltar</a>
-        </div>
-      </form>
+          <div class="button-group">
+            <button type="submit" class="add-category-btn">
+              Adicionar Produto
+            </button>
+            <a href="{% url 'products' %}" class="back-btn">Voltar</a>
+          </div>
+        </form>
+      </section>
     </main>
   </div>
 </body>
-
-<!-- Modal Structure -->
-<div id="productModal" class="modal">
-  <div class="modal-content">
-    <h2>Produto Adicionado!</h2>
-    <p>O novo produto foi adicionado com sucesso.</p>
-    <button id="closeProductModal" class="modal-btn">OK</button>
-  </div>
-</div>
-
-<script src="{% static 'dashboard/js/add_product.js' %}"></script>
 
 </html>
