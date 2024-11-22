@@ -31,6 +31,7 @@ urlpatterns = [
     path('clients/', views.clients_list, name='clients'),
     path('messages/', views.messages_list, name='messages'),
     path('orders/', views.orders_list, name='orders'),
+    path('orders/update_status/', views.update_order_status, name='update_order_status'),
 
     path('payment/', views.payment_page, name='payment'),
     path('payment/<int:pix_id>/delete/', views.delete_pix_payment, name='delete_pix_payment'),

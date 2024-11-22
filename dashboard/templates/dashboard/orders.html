@@ -84,11 +84,16 @@
         <!-- Search bar -->
         <section class="table-container">
           <div class="search-container">
-            <input
-              type="text"
-              class="search-bar"
-              placeholder="🔍 Buscar pedido"
-            />
+            <form method="get" class="search-container" style="width: 100%; max-width: 400px;">
+              <input
+                  type="text"
+                  name="search"
+                  class="search-bar"
+                  placeholder="🔍 Buscar pedido"
+                  value="{{ search_query }}"
+              />
+              <button type="submit">Buscar</button>
+          </form>
           </div>
 
           <table class="pedido-table">
@@ -111,7 +116,19 @@
                   {% endfor %}
                 </td>
                 <td>{{ order_data.order.created_at }}</td>
-                <td>{{ order_data.order.status_display }}</td>
+                <td>
+                  <select
+                    class="status-select"
+                    data-order-id="{{  order_data.order.id }}"
+                    onchange="updateOrderStatus(this)"
+                  >
+                    <option value="Pending" {% if order_data.order.status == 'Pending' %}selected{% endif %}>Pendente</option>
+                    <option value="Processing" {% if order_data.order.status == 'Processing' %}selected{% endif %}>Em Processamento</option>
+                    <option value="Shipped" {% if order_data.order.status == 'Shipped' %}selected{% endif %}>Enviado</option>
+                    <option value="Delivered" {% if order_data.order.status == 'Delivered' %}selected{% endif %}>Entregue</option>
+                    <option value="Cancelled" {% if order_data.order.status == 'Cancelled' %}selected{% endif %}>Cancelado</option>
+                  </select>
+                </td>
                 <td>{{ order_data.order.total }}</td>
               </tr>
               <tr class="order-details" style="display: none;">
@@ -134,10 +151,15 @@
           </table>
 
           <div class="pagination">
-            <button class="pagination-btn">Anterior</button>
-            <span class="page-indicator">Página 1 de 10</span>
-            <button class="pagination-btn">Próxima</button>
-          </div>
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}" class="pagination-btn">Anterior</a>
+            {% endif %}
+            <span class="page-indicator">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}&search={{ search_query }}" class="pagination-btn">Próxima</a>
+            {% endif %}
+        </div>
+        
         </section>
       </main>
     </div>
@@ -149,6 +171,37 @@
         } else {
           detailsRow.style.display = "none";
         }
+      }
+      function updateOrderStatus(selectElement) {
+        const orderId = selectElement.getAttribute("data-order-id");
+        const newStatus = selectElement.value;
+        console.log(orderId, newStatus);
+
+      
+        fetch('/dashboard/orders/update_status/', {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            order_id: orderId,
+            status: newStatus,
+          }),
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error("Erro ao atualizar o status do pedido.");
+          })
+          .then((data) => {
+            alert(data.message);
+            selectElement.value = data.status;
+          })
+          .catch((error) => {
+            console.error(error);
+            alert("Erro ao atualizar o status do pedido.");
+          });
       }
     </script>    
   </body>

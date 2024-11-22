@@ -7,6 +7,11 @@ from django.shortcuts import redirect
 from .forms import RegisterForm, EditUserForm, CategoryForm, ProductForm  
 from .models import User, Category, Client, Product, PixPayment, Order, OrderItem
 from .utils import send_telegram_message
+from django.http import JsonResponse
+import json
+from django.views.decorators.csrf import csrf_exempt
+from django.core.paginator import Paginator
+
 
 @login_required
 def dashboard(request):
@@ -121,20 +126,46 @@ def messages_list(request):
 
 @login_required
 def orders_list(request):
+    search_query = request.GET.get('search', '').strip().lower()  
     orders = Order.objects.all()
-    orders_items = OrderItem.objects.all()
-    
-    orders_with_items = []
-    for order in orders:
-        items = orders_items.filter(order_id=order.id)
-        orders_with_items.append({
+
+    STATUS_TRANSLATION = {
+        'pendente': 'Pending',
+        'em processamento': 'Processing',
+        'enviado': 'Shipped',
+        'entregue': 'Delivered',
+        'cancelado': 'Cancelled',
+    }
+
+    translated_status = STATUS_TRANSLATION.get(search_query, None)
+    if search_query:
+        orders = orders.filter(
+            client__name__icontains=search_query
+        ) | orders.filter(
+            status__icontains=translated_status if translated_status else search_query
+        )
+
+    paginator = Paginator(orders, 9) 
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+
+    orders_with_items = [
+        {
             'order': order,
-            'items': items,
-        })
+            'items': OrderItem.objects.filter(order=order)
+        }
+        for order in page_obj.object_list
+    ]
+
 
     context = {
         'orders_with_items': orders_with_items,
+        'page_obj': page_obj,
+        'search_query': search_query,
     }
+    
+    
+    
     return render(request, 'dashboard/orders.html', context)
 
 @login_required
@@ -285,3 +316,56 @@ def transmission(request):
             return render(request, 'dashboard/transmission.html', {'text': message})
 
     return render(request, 'dashboard/transmission.html')
+
+@csrf_exempt
+def update_order_status(request):
+    if request.method == 'POST':
+        try:
+            print(request.body) 
+            data = json.loads(request.body)
+            print(data) 
+            order_id = data.get('order_id')
+            new_status = data.get('status')
+
+            if not order_id or not str(order_id).isdigit():
+                return JsonResponse({'error': 'ID do pedido inválido.'}, status=400)
+
+            VALID_STATUSES = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled']
+            if new_status not in VALID_STATUSES:
+                return JsonResponse({'error': 'Status inválido.'}, status=400)
+
+            order = get_object_or_404(Order, id=int(order_id))
+            client = order.client
+
+            order.status = new_status
+            order.save()
+            print(f"Pedido {order.id} atualizado para status: {new_status}")
+
+
+            STATUS_TRANSLATIONS = {
+                'Pending': 'Pendente',
+                'Processing': 'Em Processamento',
+                'Shipped': 'Enviado',
+                'Delivered': 'Entregue',
+                'Cancelled': 'Cancelado',
+            }
+            translated_status = STATUS_TRANSLATIONS.get(new_status, new_status)
+
+        
+            if client.chat_id:
+                message = f"O status do seu pedido foi atualizado para {translated_status}."
+                send_telegram_message(message, [client.chat_id])
+
+            return JsonResponse({'status': order.status, 'message': 'Status atualizado com sucesso!'}, status=200)
+
+        except Order.DoesNotExist:
+            return JsonResponse({'error': 'Pedido não encontrado.'}, status=404)
+        except ValueError as ve:
+            print(f"Erro de valor: {ve}")
+            return JsonResponse({'error': 'Erro ao processar os dados.'}, status=400)
+        except Exception as e:
+            print(f"Erro inesperado: {e}")
+            return JsonResponse({'error': 'Erro interno do servidor.'}, status=500)
+    else:
+        return JsonResponse({'error': 'Método não permitido.'}, status=405)
+

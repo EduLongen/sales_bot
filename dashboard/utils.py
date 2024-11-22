@@ -2,6 +2,8 @@ import qrcode
 from io import BytesIO
 import requests
 import os
+from dotenv import load_dotenv
+
 
 def calculate_crc(data):
     crc = 0xFFFF
@@ -46,6 +48,8 @@ def generate_pix_qr_code(pix_payment):
     
     return buffer
 
+load_dotenv()
+
 def send_telegram_message(message, chat_ids):
     bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
     if not bot_token:
@@ -59,6 +63,7 @@ def send_telegram_message(message, chat_ids):
             'chat_id': str(chat_id),
             'text': message
         }
+        print(chat_id)
         try:
             response = requests.post(url, json=data)
             print(f"Resposta do Telegram: {response.status_code}, {response.text}")
