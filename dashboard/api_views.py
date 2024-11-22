@@ -73,9 +73,14 @@ class ClientViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'], url_path='chat/(?P<chat_id>[^/.]+)', permission_classes=[AllowAny])
     def get_by_chat_id(self, request, chat_id=None):
-        client = get_object_or_404(Client, chat_id=chat_id)
-        serializer = self.get_serializer(client)
-        return Response(serializer.data)
+        try:
+            # Tenta buscar o cliente pelo chat_id
+            client = Client.objects.get(chat_id=chat_id)
+            serializer = ClientSerializer(client)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Client.DoesNotExist:
+            # Retorna um JSON vazio se não encontrar
+            return Response({}, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['get'], url_path='last-order/(?P<chat_id>[^/.]+)', permission_classes=[AllowAny])
     def last_order(self, request, chat_id=None):

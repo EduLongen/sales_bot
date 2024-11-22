@@ -102,24 +102,24 @@
               </tr>
             </thead>
             <tbody>
-              {% for order in orders %}
+              {% for order_data in orders_with_items %}
               <tr class="order-row">
-                <td>{{ order.client }}</td>
+                <td>{{ order_data.order.client }}</td>
                 <td class="products" onclick="toggleDetails(this)">
-                  {% for order_item in orders_item %}
-                    {{ order_item.quantity }} {{ order_item.product }}{% if not forloop.last %}, {% endif %}
+                  {% for item in order_data.items %}
+                    {{ item.quantity }} {{ item.product }}{% if not forloop.last %}, {% endif %}
                   {% endfor %}
                 </td>
-                <td>{{ order.created_at }}</td>
-                <td>{{ order.status_display }}</td>
-                <td>{{ order.total }}</td>
+                <td>{{ order_data.order.created_at }}</td>
+                <td>{{ order_data.order.status_display }}</td>
+                <td>{{ order_data.order.total }}</td>
               </tr>
               <tr class="order-details" style="display: none;">
                 <td colspan="5">
                   <strong>Detalhes dos produtos:</strong>
                   <ul>
-                    {% for order_item in orders_item %}
-                    <li>{{ order_item.quantity }}x {{ order_item.product }} - {{ order_item.price }}</li>
+                    {% for item in order_data.items %}
+                    <li>{{ item.quantity }}x {{ item.product }} - {{ item.price }}</li>
                     {% endfor %}
                   </ul>
                 </td>
@@ -129,7 +129,8 @@
                 <td colspan="5">Nenhum pedido encontrado.</td>
               </tr>
               {% endfor %}
-            </tbody>            
+            </tbody>
+                      
           </table>
 
           <div class="pagination">
